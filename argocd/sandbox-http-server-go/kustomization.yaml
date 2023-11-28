@@ -9,9 +9,7 @@ configMapGenerator:
   - name: nginx-config-map
     files:
       - initdb.sql=initdb.sql
-namespace: sandbox-http-server-go
 resources:
-  - namespace.yaml
   - nginx-deployment.yaml
   - http-server-deployment.yaml
   - http-server-ingress.yaml
