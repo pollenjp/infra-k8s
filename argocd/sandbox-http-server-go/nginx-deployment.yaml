@@ -1,0 +1,85 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox-http-server-go-postgres
+  labels:
+    app: sandbox-http-server-go
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: sandbox-http-server-go
+    tier: postgres
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: sandbox-http-server-go
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox-http-server-go-postgres
+  labels:
+    app: sandbox-http-server-go
+spec:
+  selector:
+    matchLabels:
+      app: sandbox-http-server-go
+      tier: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sandbox-http-server-go
+        tier: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: password
+            - name: POSTGRES_USER
+              value: testuser
+            - name: POSTGRES_DB
+              value: testdb
+
+          ports:
+            - containerPort: 5432
+              name: postgres
+
+          volumeMounts:
+            - name: initdb-sql
+              mountPath: /docker-entrypoint-initdb.d
+            - name: postgres-persistent-storage
+              mountPath: /var/lib/postgresql
+              subPath: data
+
+      volumes:
+        - name: postgres-persistent-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+        - name: initdb-sql
+          configMap:
+            name: nginx-config-map

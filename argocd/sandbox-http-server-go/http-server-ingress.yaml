@@ -1,0 +1,37 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sandbox-http-server-go-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: true
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/ssl-redirect: false
+    # cert-manager.io/issuer: "sandbox-http-server-go-letsencrypt-issuer"
+
+spec:
+  # tls:
+  #   - hosts:
+  #       - sandbox-http-server-go.pollenjp.com
+  #     secretName: sandbox-http-server-go-pollenjp-com-tls
+  rules:
+    # - host: sandbox-http-server-go.pollenjp.com
+    - host: sandbox-http-server-go.pollenjp.com
+      http:
+        paths:
+          # - path: /sandbox-http-server-go
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: sandbox-http-server-go-svc
+                port:
+                  number: 8080
+# - path: /sandbox-http-server-go
+#   pathType: Prefix
+#   backend:
+#     service:
+#       name: web2
+#       port:
+#         number: 8080
