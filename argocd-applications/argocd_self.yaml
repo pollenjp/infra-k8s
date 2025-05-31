@@ -9,7 +9,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   source:
-    path: argocd-self-application
+    path: argocd-self
     repoURL: "https://github.com/pollenjp/infra-k8s"
     targetRevision: HEAD
     directory:
