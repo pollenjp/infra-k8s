@@ -1,5 +1,5 @@
-global:
-  domain: argocd.pollenjp.com # ingress
+#global:
+#  domain: argocd.pollenjp.com # ingress
 
 # redis-ha:
 #   enabled: true
