@@ -15,11 +15,10 @@ server:
   autoscaling:
     enabled: true
     minReplicas: 2
-#  ingress: # ingress
-#    enabled: true
-#    # svc name: cilium-ingress-<name:argo-argocd-server>
-#    ingressClassName: cilium # -> service/cilium-ingress-argo-argocd-server
-#    tls: false
+  ingress: # ingress
+    enabled: true
+    ingressClassName: cilium
+    tls: false
 #  service: # argo-argocd-server
 #    type: ClusterIP # service/argo-argocd-server
 
