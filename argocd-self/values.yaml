@@ -1,8 +1,8 @@
 global:
-  domain: sandbox2.pollenjp.com # ingress
+  domain: argocd.pollenjp.com # ingress
 
-redis-ha:
-  enabled: true
+# redis-ha:
+#   enabled: true
 
 controller:
   replicas: 1
