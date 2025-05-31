@@ -1,0 +1,32 @@
+global:
+  domain: sandbox2.pollenjp.com # ingress
+
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+configs:
+  params:
+    server.insecure: true # ingress
+
+server:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+#  ingress: # ingress
+#    enabled: true
+#    # svc name: cilium-ingress-<name:argo-argocd-server>
+#    ingressClassName: cilium # -> service/cilium-ingress-argo-argocd-server
+#    tls: false
+#  service: # argo-argocd-server
+#    type: ClusterIP # service/argo-argocd-server
+
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+applicationSet:
+  replicas: 2
