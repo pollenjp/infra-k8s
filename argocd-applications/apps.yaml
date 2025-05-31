@@ -11,7 +11,7 @@ spec:
         repoURL: https://github.com/pollenjp/infra-k8s.git
         revision: HEAD
         files:
-          - path: "argocd/*/config.json5"
+          - path: "apps/*/config.json5"
   template:
     metadata:
       name: "{{.name}}"
