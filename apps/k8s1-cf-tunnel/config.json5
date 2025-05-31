@@ -1,0 +1,4 @@
+{
+    name: "cf-tunnel",
+    namespace: "cf-tunnel",
+}
