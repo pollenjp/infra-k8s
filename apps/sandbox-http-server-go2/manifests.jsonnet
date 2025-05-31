@@ -1,5 +1,5 @@
-{
-  deployment: {
+[
+  {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
@@ -57,8 +57,7 @@
       },
     },
   },
-
-  service: {
+  {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
@@ -80,8 +79,7 @@
       ],
     },
   },
-
-  ingress: {
+  {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'Ingress',
     metadata: {
@@ -118,4 +116,4 @@
       ],
     },
   },
-}
+]
