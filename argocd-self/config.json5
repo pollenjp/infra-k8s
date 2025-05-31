@@ -5,5 +5,5 @@
   "release_name": "argo",
   "release_chart": "argo-cd",
   "chart_repo_url": "https://argoproj.github.io/argo-helm",
-  "chart_version": "8.0.9",
+  "chart_version": "8.0.14", // https://github.com/argoproj/argo-helm/releases
 }
