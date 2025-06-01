@@ -160,7 +160,7 @@ local configMap = {
             - hostname: argocd.pollenjp.com
               service: http://argo-argocd-server.argocd.svc.cluster.local
             - hostname: sandbox-http-server-go1.pollenjp.com
-              service: http://cilium-ingress-sandbox-http-server-go1.sandbox-http-server-go1.svc.cluster.local
+              service: http://sandbox-server-svc.sandbox-http-server-go1.svc.cluster.local
             - hostname: sandbox-http-server-go2.pollenjp.com
               service: http://sandbox-http-server-go2-svc.sandbox-http-server-go2.svc.cluster.local:8080
             - hostname: sandbox-nginx.pollenjp.com
