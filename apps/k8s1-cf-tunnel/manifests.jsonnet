@@ -1,13 +1,19 @@
+# NOTE: same as the tunnel name configured in cloudflare
 local tunnel_name = 'k8s1-cf-tunnel';
+local cf_tunnel_token_name = 'cf-tunnel-token';
 
 local deployment = {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
     name: 'cloudflared',
+    labels: {
+      'app.kubernetes.io/name': 'k8s1-cf-tunnel',
+    },
     annotations: {
+      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=zvyy23tjbsvgg2jrfpdztsx3zi&h=my.1password.com
       'operator.1password.io/item-path': 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/zvyy23tjbsvgg2jrfpdztsx3zi',
-      'operator.1password.io/item-name': 'cf-tunnel-token',
+      'operator.1password.io/item-name': cf_tunnel_token_name,
     },
   },
   spec: {
@@ -28,6 +34,7 @@ local deployment = {
       metadata: {
         labels: {
           app: 'cloudflared',
+          'app.kubernetes.io/name': 'k8s1-cf-tunnel',
         },
       },
       spec: {
@@ -45,18 +52,18 @@ local deployment = {
             ],
           },
         },
+        securityContext: {
+          sysctls: [
+            {
+              name: 'net.ipv4.ping_group_range',
+              value: '65532 65532',
+            },
+          ],
+        },
         containers: [
           {
             name: 'cloudflared',
             image: 'mirror.gcr.io/cloudflare/cloudflared:2025.5.0',
-            securityContext: {
-              sysctls: [
-                {
-                  name: 'net.ipv4.ping_group_range',
-                  value: '65532 65532',
-                },
-              ],
-            },
             args: [
               'tunnel',
               '--config',
@@ -99,7 +106,7 @@ local deployment = {
           {
             name: 'creds',
             secret: {
-              secretName: 'cf-tunnel-token',
+              secretName: cf_tunnel_token_name,
               items: [
                 {
                   key: 'password',
@@ -131,27 +138,35 @@ local configMap = {
   kind: 'ConfigMap',
   metadata: {
     name: 'cloudflared',
+    labels: {
+      'app.kubernetes.io/name': 'k8s1-cf-tunnel',
+    },
   },
   data: {
-    'config.yaml': |||
-      tunnel: %(tunnel_name)s
-      credentials-file: /etc/cloudflared/creds/credentials.json
+    'config.yaml': std.join(
+      '\n',
+      [
+        std.format('tunnel: %s', tunnel_name),
+        |||
+          credentials-file: /etc/cloudflared/creds/credentials.json
 
-      # Serves the metrics server under /metrics and the readiness server under /ready
-      metrics: 0.0.0.0:2000
+          # Serves the metrics server under /metrics and the readiness server under /ready
+          metrics: 0.0.0.0:2000
 
-      # autoupdate doesn't make sense in Kubernetes
-      no-autoupdate: true
+          # autoupdate doesn't make sense in Kubernetes
+          no-autoupdate: true
 
-      ingress:
-        - hostname: argocd.pollenjp.com
-          service: http://argo-argocd-server.argocd.svc.cluster.local
-        - hostname: sandbox-http-server-go.pollenjp.com
-          service: http://cilium-ingress-sandbox-http-server-go-sample-ingress.sandbox-http-server-go-sample.svc.cluster.local
-        - hostname: www.pollenjp.com
-          service: http://sandbox-http-server-go-sample-svc.sandbox-http-server-go-sample.svc.cluster.local:8080
-        - service: http_status:404
-    |||,
+          ingress:
+            - hostname: argocd.pollenjp.com
+              service: http://argo-argocd-server.argocd.svc.cluster.local
+            - hostname: sandbox-http-server-go.pollenjp.com
+              service: http://cilium-ingress-sandbox-http-server-go-sample-ingress.sandbox-http-server-go-sample.svc.cluster.local
+            - hostname: www.pollenjp.com
+              service: http://sandbox-http-server-go-sample-svc.sandbox-http-server-go-sample.svc.cluster.local:8080
+            - service: http_status:404
+        |||
+      ]
+    ),
   },
 };
 
