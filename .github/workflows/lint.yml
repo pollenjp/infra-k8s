@@ -1,0 +1,27 @@
+name: Lint
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Install dependencies
+        run: |
+          # jq is already installed in the base environment
+          # sudo apt-get install -y jq
+
+          go install github.com/google/go-jsonnet/cmd/jsonnet@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Run lint
+        run: |
+          make lint

@@ -1,6 +1,7 @@
 # NOTE: same as the tunnel name configured in cloudflare
 local tunnel_name = 'k8s1-cf-tunnel';
 local cf_tunnel_token_name = 'cf-tunnel-token';
+local name = (import 'config.json5').name;
 
 local deployment = {
   apiVersion: 'apps/v1',
@@ -133,43 +134,45 @@ local deployment = {
   },
 };
 
+local config_map_data = {
+  'config.yaml': std.join(
+    '\n',
+    [
+      std.format('tunnel: %s', tunnel_name),
+      |||
+        credentials-file: /etc/cloudflared/creds/credentials.json
+
+        # Serves the metrics server under /metrics and the readiness server under /ready
+        metrics: 0.0.0.0:2000
+
+        # autoupdate doesn't make sense in Kubernetes
+        no-autoupdate: true
+
+        ingress:
+          - hostname: argocd.pollenjp.com
+            service: http://argo-argocd-server.argocd.svc.cluster.local
+          - hostname: sandbox-http-server-go1.pollenjp.com
+            service: http://sandbox-server-svc.sandbox-http-server-go1.svc.cluster.local
+          - hostname: sandbox-http-server-go2.pollenjp.com
+            service: http://sandbox-http-server-go2-svc.sandbox-http-server-go2.svc.cluster.local:8080
+          - hostname: sandbox-nginx.pollenjp.com
+            service: http://sandbox-nginx-svc.sandbox-nginx.svc.cluster.local:8080
+          - service: http_status:404
+      |||
+    ]
+  ),
+};
+
 local configMap = {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: 'cloudflared',
+    name: name + '-' + (import '../../jsonnetlib/hash.libsonnet') { data: config_map_data }.output,
     labels: {
       'app.kubernetes.io/name': 'k8s1-cf-tunnel',
     },
   },
-  data: {
-    'config.yaml': std.join(
-      '\n',
-      [
-        std.format('tunnel: %s', tunnel_name),
-        |||
-          credentials-file: /etc/cloudflared/creds/credentials.json
-
-          # Serves the metrics server under /metrics and the readiness server under /ready
-          metrics: 0.0.0.0:2000
-
-          # autoupdate doesn't make sense in Kubernetes
-          no-autoupdate: true
-
-          ingress:
-            - hostname: argocd.pollenjp.com
-              service: http://argo-argocd-server.argocd.svc.cluster.local
-            - hostname: sandbox-http-server-go1.pollenjp.com
-              service: http://sandbox-server-svc.sandbox-http-server-go1.svc.cluster.local
-            - hostname: sandbox-http-server-go2.pollenjp.com
-              service: http://sandbox-http-server-go2-svc.sandbox-http-server-go2.svc.cluster.local:8080
-            - hostname: sandbox-nginx.pollenjp.com
-              service: http://sandbox-nginx-svc.sandbox-nginx.svc.cluster.local:8080
-            - service: http_status:404
-        |||
-      ]
-    ),
-  },
+  data: config_map_data,
 };
 
 [

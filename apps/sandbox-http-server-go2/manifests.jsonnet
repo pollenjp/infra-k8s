@@ -1,3 +1,7 @@
+local svc_name = (import 'config.json5').name + '-svc';
+local pod_name = (import 'config.json5').name + '-pod';
+local container_name = (import 'config.json5').name + '-container';
+
 local deployment = {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -15,19 +19,19 @@ local deployment = {
     replicas: 3,
     selector: {
       matchLabels: {
-        'app.kubernetes.io/name': (import 'config.json5').name + '-pod',
+        'app.kubernetes.io/name': pod_name,
       },
     },
     template: {
       metadata: {
         labels: {
-          'app.kubernetes.io/name': (import 'config.json5').name + '-pod',
+          'app.kubernetes.io/name': pod_name,
         },
       },
       spec: {
         containers: [
           {
-            name: (import 'config.json5').name + '-container',
+            name: container_name,
             image: 'ghcr.io/pollenjp/sandbox-http-server-go:0.1.17',
             imagePullPolicy: 'Always',
             ports: [
@@ -61,14 +65,14 @@ local service = {
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: (import 'config.json5').name + '-svc',
+    name: svc_name,
     labels: {
-      'app.kubernetes.io/name': (import 'config.json5').name + '-svc',
+      'app.kubernetes.io/name': svc_name,
     },
   },
   spec: {
     selector: {
-      'app.kubernetes.io/name': (import 'config.json5').name + '-pod',
+      'app.kubernetes.io/name': pod_name,
     },
     ports: [
       {
