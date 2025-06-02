@@ -12,7 +12,7 @@ find . -name "*.jsonnet" | while read -r jsonnet_file; do
   # Parse jsonnet and check ConfigMap names
   jsonnet "$jsonnet_file" | jq -r '
     if type == "array" then .[] else . end |
-    select(.kind == "ConfigMap") |
+    select(.kind == "ConfigMap" or .kind == "PersistentVolume" or .kind == "PersistentVolumeClaim") |
     .metadata.name |
     select(test("'"$hashed_sign"'$") | not)
   ' | while read -r invalid_name; do

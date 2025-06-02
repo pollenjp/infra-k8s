@@ -1,4 +1,4 @@
 
 .PHONY: lint
 lint:
-	"./lint-configmap-hash.sh"
+	"./lint-hash.sh"
