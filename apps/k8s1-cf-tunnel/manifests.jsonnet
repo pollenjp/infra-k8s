@@ -13,32 +13,34 @@ local configMap = {
     },
   },
   data: {
-    'config.yaml': std.join(
-      '\n',
-      [
-        std.format('tunnel: %s', tunnel_name),
-        |||
-          credentials-file: /etc/cloudflared/creds/credentials.json
-
-          # Serves the metrics server under /metrics and the readiness server under /ready
-          metrics: 0.0.0.0:2000
-
-          # autoupdate doesn't make sense in Kubernetes
-          no-autoupdate: true
-
-          ingress:
-            - hostname: argocd.pollenjp.com
-              service: http://argo-argocd-server.argocd.svc.cluster.local
-            - hostname: sandbox-http-server-go1.pollenjp.com
-              service: http://cilium-ingress-sandbox-server-ingress.sandbox-http-server-go1.svc.cluster.local
-              # service: http://sandbox-server-svc.sandbox-http-server-go1.svc.cluster.local:8080
-            - hostname: sandbox-http-server-go2.pollenjp.com
-              service: http://sandbox-http-server-go2-svc.sandbox-http-server-go2.svc.cluster.local:8080
-            - hostname: sandbox-nginx.pollenjp.com
-              service: http://sandbox-nginx-svc.sandbox-nginx.svc.cluster.local:8080
-            - service: http_status:404
-        |||
-      ]
+    'config.yaml': std.manifestYamlDoc(
+      {
+        tunnel: tunnel_name,
+        'credentials-file': '/etc/cloudflared/creds/credentials.json',
+        metrics: '0.0.0.0:2000',
+        'no-autoupdate': true,
+        ingress: [
+          {
+            hostname: 'argocd.pollenjp.com',
+            service: 'http://argo-argocd-server.argocd.svc.cluster.local',
+          },
+          {
+            hostname: 'sandbox-http-server-go1.pollenjp.com',
+            service: 'http://cilium-ingress-sandbox-server-ingress.sandbox-http-server-go1.svc.cluster.local',
+          },
+          {
+            hostname: 'sandbox-http-server-go2.pollenjp.com',
+            service: 'http://sandbox-http-server-go2-svc.sandbox-http-server-go2.svc.cluster.local:8080',
+          },
+          {
+            hostname: 'sandbox-nginx.pollenjp.com',
+            service: 'http://sandbox-nginx-svc.sandbox-nginx.svc.cluster.local:8080',
+          },
+          {
+            service: 'http_status:404',
+          },
+        ],
+      },
     ),
   },
 };
