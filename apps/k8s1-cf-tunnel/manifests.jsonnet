@@ -7,7 +7,7 @@ local configMap = {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: 'tmp',
+    name: 'dummy',
     labels: {
       'app.kubernetes.io/name': 'k8s1-cf-tunnel',
     },
