@@ -1,5 +1,5 @@
 local env = (import '../../env.jsonnet');
-local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
+local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
 
 local name = (import 'config.json5').name;
 

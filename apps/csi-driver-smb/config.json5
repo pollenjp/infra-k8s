@@ -1,4 +1,0 @@
-{
-  "name": "csi-driver-smb",
-  "namespace": "kube-system",
-}

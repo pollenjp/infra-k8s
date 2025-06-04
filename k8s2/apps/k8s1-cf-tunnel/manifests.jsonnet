@@ -1,9 +1,10 @@
+local env = (import '../../env.jsonnet');
+local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
+
 # NOTE: same as the tunnel name configured in cloudflare
 local tunnel_name = 'k8s1-cf-tunnel';
 local cf_tunnel_token_name = 'cf-tunnel-token';
 local name = (import 'config.json5').name;
-local env = (import '../../env.jsonnet');
-local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
 
 local configMap = {
   apiVersion: 'v1',
