@@ -2,6 +2,8 @@
 local tunnel_name = 'k8s1-cf-tunnel';
 local cf_tunnel_token_name = 'cf-tunnel-token';
 local name = (import 'config.json5').name;
+local env = (import '../../env.jsonnet');
+local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
 
 local configMap = {
   apiVersion: 'v1',
@@ -44,7 +46,7 @@ local configMap = {
     ),
   },
 };
-local config_map_name = name + '-' + (import '../../jsonnetlib/hash.libsonnet') { data: configMap }.output;
+local config_map_name = name + '-' + lib_hash { data: configMap }.output;
 
 local deployment = {
   apiVersion: 'apps/v1',

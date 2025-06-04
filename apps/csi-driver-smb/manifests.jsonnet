@@ -4,6 +4,9 @@ local namespace = (import 'config.json5').namespace;
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
 
+local env = (import '../../env.jsonnet');
+local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
+
 local helm = {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
@@ -44,7 +47,7 @@ local op_item_spec = {
   // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=rvybz6bamkrlwpiwqrqfm74w4e&h=my.1password.com
   item: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/rvybz6bamkrlwpiwqrqfm74w4e',
 };
-local secret_name = name + '-secret-' + (import '../../jsonnetlib/hash.libsonnet') { data: op_item_spec }.output;
+local secret_name = name + '-secret-' + lib_hash { data: op_item_spec }.output;
 local storage_class = {
   apiVersion: 'storage.k8s.io/v1',
   kind: 'StorageClass',

@@ -1,3 +1,6 @@
+local env = (import '../../env.jsonnet');
+local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
+
 local name = (import 'config.json5').name;
 
 local cilium_balancer_ip_pool = {
@@ -7,10 +10,10 @@ local cilium_balancer_ip_pool = {
     name: 'dummy',
   },
   spec: {
-    blocks: [{ start: "192.168.100.80", stop: "192.168.100.89" }],
+    blocks: [env.ip_pool],
   },
 };
-local cilium_balancer_ip_pool_name = name + '-ip-pool-' + (import '../../jsonnetlib/hash.libsonnet') {data: cilium_balancer_ip_pool}.output;
+local cilium_balancer_ip_pool_name = name + '-ip-pool-' + lib_hash {data: cilium_balancer_ip_pool}.output;
 
 local cilium_l2_announcement = {
   apiVersion: "cilium.io/v2alpha1",
@@ -29,7 +32,7 @@ local cilium_l2_announcement = {
     loadBalancerIPs: true,
   },
 };
-local cilium_l2_announcement_name = name + '-l2-announcement-policy-' + (import '../../jsonnetlib/hash.libsonnet') {data: cilium_l2_announcement}.output;
+local cilium_l2_announcement_name = name + '-l2-announcement-policy-' + lib_hash {data: cilium_l2_announcement}.output;
 
 [
   std.mergePatch(cilium_balancer_ip_pool, { metadata: { name: cilium_balancer_ip_pool_name } }),

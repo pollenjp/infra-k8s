@@ -10,7 +10,9 @@ local op_item_spec = {
   // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=rvybz6bamkrlwpiwqrqfm74w4e&h=my.1password.com
   item: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/rvybz6bamkrlwpiwqrqfm74w4e',
 };
-local secret_name = name + '-smbcreds-' + (import '../../jsonnetlib/hash.libsonnet') { data: op_item_spec }.output;
+local env = (import '../../env.jsonnet');
+local lib_hash = (import '../../jsonnetlib/hash.libsonnet');
+local secret_name = name + '-smbcreds-' + lib_hash { data: op_item_spec }.output;
 
 // https://github.com/kubernetes-csi/csi-driver-smb/blob/master/docs/driver-parameters.md
 
@@ -56,7 +58,7 @@ local pv = {
     },
   },
 };
-local pv_name = name + '-' + (import '../../jsonnetlib/hash.libsonnet') { data: pv }.output;
+local pv_name = name + '-' + lib_hash { data: pv }.output;
 
 local pvc = {
   apiVersion: 'v1',
@@ -76,7 +78,7 @@ local pvc = {
     storageClassName: 'smb',
   },
 };
-local pvc_name = name + '-' + (import '../../jsonnetlib/hash.libsonnet') { data: pvc }.output;
+local pvc_name = name + '-' + lib_hash { data: pvc }.output;
 
 local deployment = {
   apiVersion: 'apps/v1',
