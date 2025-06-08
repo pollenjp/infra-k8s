@@ -90,6 +90,7 @@ local deployment = {
     name: name,
     namespace: namespace,
     annotations: {
+      // FIXME: busybox is useless
       'operator.1password.io/item-path': op_item_spec.item,
       'operator.1password.io/item-name': secret_name,
     },
