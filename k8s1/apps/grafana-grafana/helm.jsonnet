@@ -70,7 +70,17 @@ local helm_app = {
                   type: 'loki',
                   access: 'proxy',
                   orgId: 1,
-                  url: 'http://loki-gateway.' + (import '../grafana-loki/config.json5').namespace + '.svc.cluster.local:80',
+                  // jsonData: {
+                  //   httpHeaderName1: 'X-Scope-OrgID',
+                  // },
+                  // secureJsonData: {
+                  //   httpHeaderValue1: '1',
+                  // },
+                  url: (
+                    local n = (import '../grafana-loki/config.json5').name + '-gateway';
+                    local ns = (import '../grafana-loki/config.json5').namespace;
+                    'http://' + n + '.' + ns + '.svc.cluster.local'
+                  ),
                   basicAuth: false,
                   isDefault: false,
                   version: 1,

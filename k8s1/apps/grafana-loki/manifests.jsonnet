@@ -49,6 +49,7 @@ local helm_app = {
         releaseName: name,
         valuesObject: {
           loki: {
+            auth_enabled: false,
             schemaConfig: {
               configs: [
                 {

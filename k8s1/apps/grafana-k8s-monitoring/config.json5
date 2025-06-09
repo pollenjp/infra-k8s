@@ -1,0 +1,4 @@
+{
+  "name": "k8s-monitoring",
+  "namespace": "k8s-monitoring",
+}
