@@ -27,6 +27,15 @@ local configMap = {
             service: 'http://argo-argocd-server.argocd.svc.cluster.local',
           },
           {
+
+            hostname: 'grafana.pollenjp.com',
+            service: (
+              local n = (import '../grafana-grafana/config.json5').name;
+              local ns = (import '../grafana-grafana/config.json5').namespace;
+              'http://' + n + '.' + ns + '.svc.cluster.local'
+            ),
+          },
+          {
             hostname: 'longhorn.pollenjp.com',
             service: 'http://longhorn-frontend.' + (import '../longhorn/config.json5').namespace + '.svc.cluster.local',
           },

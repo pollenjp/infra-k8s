@@ -1,4 +1,4 @@
 {
-  "name": "grafana-loki",
+  "name": "loki",
   "namespace": "loki",
 }
