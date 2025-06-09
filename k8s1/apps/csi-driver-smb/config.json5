@@ -1,4 +1,5 @@
 {
   "name": "csi-driver-smb",
   "namespace": "kube-system",
+  "storage_class_name": "smb",
 }

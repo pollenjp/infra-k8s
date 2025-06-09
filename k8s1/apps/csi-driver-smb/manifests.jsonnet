@@ -1,5 +1,6 @@
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
+local storage_class_name = (import 'config.json5').storage_class_name;
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
@@ -52,10 +53,10 @@ local storage_class = {
   apiVersion: 'storage.k8s.io/v1',
   kind: 'StorageClass',
   metadata: {
-    name: 'smb',
+    name: storage_class_name,
     namespace: namespace,
     annotations: {
-      'storageclass.kubernetes.io/is-default-class': 'true',
+      // 'storageclass.kubernetes.io/is-default-class': 'true',
     },
   },
   provisioner: 'smb.csi.k8s.io',
