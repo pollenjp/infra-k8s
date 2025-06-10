@@ -49,8 +49,25 @@ local configMap = {
           },
           {
             hostname: 'sandbox-nginx.pollenjp.com',
-            service: 'http://sandbox-nginx-svc.' + (import '../sandbox-nginx/config.json5').namespace + '.svc.cluster.local:8080',
+            service: (
+              // svc
+              local n = (import '../sandbox-nginx/config.json5').name;
+              local ns = (import '../sandbox-nginx/config.json5').namespace;
+              'http://' + n + '.' + ns + '.svc.cluster.local:8080'
+            ),
           },
+          (
+            local public_domain = (import '../sandbox-nginx/config.json5').public_domain;
+            {
+              hostname: public_domain,
+              service: (
+                // ingress
+                local n = 'cilium-ingress-' + (import '../sandbox-nginx/config.json5').name;
+                local ns = (import '../sandbox-nginx/config.json5').namespace;
+                'https://' + n + '.' + ns + '.svc.cluster.local'
+              ),
+            },
+          ),
           {
             service: 'http_status:404',
           },

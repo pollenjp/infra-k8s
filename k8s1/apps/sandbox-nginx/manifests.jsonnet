@@ -1,10 +1,14 @@
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
+local public_domain = (import 'config.json5').public_domain;
 
 local pod_name = name + '-pod';
 local container_name = name + '-container';
 local deployment_name = name + '-deployment';
-local service_name = name + '-svc';
+local service_name = name;
+local ingress_name = name;
+
+local issuer_name = (import '../letsencrypt-stg-issuer/config.json5').name;
 
 local op_item_spec = {
   // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=rvybz6bamkrlwpiwqrqfm74w4e&h=my.1password.com
@@ -162,9 +166,52 @@ local service = {
   },
 };
 
+local ingress = {
+  apiVersion: 'networking.k8s.io/v1',
+  kind: 'Ingress',
+  metadata: {
+    name: ingress_name,
+    annotations: {
+      'cert-manager.io/cluster-issuer': issuer_name,
+    },
+  },
+  spec: {
+    rules: [
+      {
+        host: public_domain,
+        http: {
+          paths: [
+            {
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: service_name,
+                  port: {
+                    number: service.spec.ports[0].targetPort,
+                  },
+                },
+              }
+            }
+          ]
+        }
+      }
+    ],
+    tls: [
+      {
+        hosts: [
+          public_domain,
+        ],
+        secretName: public_domain + '-tls',
+      }
+    ]
+  }
+};
+
 [
   std.mergePatch(pv, { metadata: { name: pv_name } }),
   std.mergePatch(pvc, { metadata: { name: pvc_name } }),
   deployment,
   service,
+  ingress,
 ]
