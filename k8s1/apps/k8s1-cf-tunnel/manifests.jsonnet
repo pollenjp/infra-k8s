@@ -70,6 +70,7 @@ local deployment = {
       'app.kubernetes.io/name': 'k8s1-cf-tunnel',
     },
     annotations: {
+      // k8s1-cf-tunnel
       // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=zvyy23tjbsvgg2jrfpdztsx3zi&h=my.1password.com
       'operator.1password.io/item-path': 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/zvyy23tjbsvgg2jrfpdztsx3zi',
       'operator.1password.io/item-name': cf_tunnel_token_name,

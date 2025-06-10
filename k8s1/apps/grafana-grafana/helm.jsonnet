@@ -1,3 +1,5 @@
+local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
+
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
 
@@ -8,13 +10,14 @@ local op_item = {
   apiVersion: 'onepassword.com/v1',
   kind: 'OnePasswordItem',
   metadata: {
-    name: name,
+    name: 'dummy',
   },
   spec: {
     // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=tibvxjoy34cu3sc5vhfri6cf2u&h=my.1password.com
     itemPath: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/tibvxjoy34cu3sc5vhfri6cf2u',
   },
 };
+local op_item_name = name + '-' + lib_hash {data: op_item}.output;
 
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
@@ -53,7 +56,7 @@ local helm_app = {
             enabled: true,
           },
           admin: {
-            existingSecret: op_item.metadata.name,
+            existingSecret: op_item_name,
             userKey: 'username',
             passwordKey: 'password',
           },
@@ -96,6 +99,6 @@ local helm_app = {
 };
 
 [
-  op_item,
+  std.mergePatch(op_item, { metadata: { name: op_item_name } }),
   helm_app,
 ]
