@@ -8,8 +8,6 @@ run = './gen-yaml.sh'
 
 [tasks.lint]
 description = "Lint the yaml files"
-sources = ["**/*.{jsonnet,json5,json}"]
-outputs = { auto = true }
 run = "./lint-hash.sh"
 
 [tools]
