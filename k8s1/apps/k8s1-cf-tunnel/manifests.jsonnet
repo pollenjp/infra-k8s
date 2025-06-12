@@ -65,8 +65,8 @@ local configMap = {
                 local n = 'cilium-ingress-' + (import '../sandbox-nginx/config.json5').name;
                 local ns = (import '../sandbox-nginx/config.json5').namespace;
                 'https://' + n + '.' + ns + '.svc.cluster.local'
-              ),
-            },
+              )
+            }
           ),
           {
             service: 'http_status:404',
