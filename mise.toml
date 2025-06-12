@@ -2,8 +2,15 @@ min_version = "2025.6.1"
 
 [tasks.gen]
 description = "Convert jsonnet to yaml (use the yaml information by Ansible)"
+sources = ["**/*.{jsonnet,json5,json}"]
+outputs = { auto = true }
 run = './gen-yaml.sh'
 
 [tasks.lint]
 description = "Lint the yaml files"
+sources = ["**/*.{jsonnet,json5,json}"]
+outputs = { auto = true }
 run = "./lint-hash.sh"
+
+[tools]
+"aqua:google/go-jsonnet" = "latest"
