@@ -89,6 +89,20 @@ local helm_app = {
                   version: 1,
                   editable: false,
                 },
+                {
+                  name: 'Prometheus',
+                  type: 'prometheus',
+                  access: 'proxy',
+                  orgId: 1,
+                  url: (
+                    local n = (import '../grafana-prometheus/config.json5').name + '-server';
+                    local ns = (import '../grafana-prometheus/config.json5').namespace;
+                    'http://' + n + '.' + ns + '.svc.cluster.local'
+                  ),
+                  isDefault: false,
+                  version: 1,
+                  editable: false,
+                },
               ],
             },
           },
