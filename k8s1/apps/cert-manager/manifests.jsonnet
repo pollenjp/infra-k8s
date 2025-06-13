@@ -41,6 +41,11 @@ local helm_app = {
             enabled: true,
             keep: true,
           },
+          prometheus: {
+            serviceMonitor: {
+              enabled: true,
+            },
+          }
         },
       },
     },
