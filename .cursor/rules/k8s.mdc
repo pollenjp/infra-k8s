@@ -1,0 +1,62 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## OnePasswordItem について
+
+- 私が `op_item` と書くときは onepassworditem のことを指すことが多い。
+- `kind: OnePasswordItem` の manifest のフォーマットは以下であるためそれに習って suggest してください。
+
+  ```yaml
+  apiVersion: onepassword.com/v1
+  kind: OnePasswordItem
+  metadata:
+    name: <item_name> #this name will also be used for naming the generated kubernetes secret
+  spec:
+    itemPath: "vaults/<vault_id_or_title>/items/<item_id_or_title>"
+  ```
+
+  ```jsonnet
+  local op_item = {
+    apiVersion: onepassword.com/v1,
+    kind: OnePasswordItem,
+    metadata: {
+      name: <item_name>, #this name will also be used for naming the generated kubernetes secret
+    },
+    spec: {
+      itemPath: "vaults/<vault_id_or_title>/items/<item_id_or_title>"
+    }
+  };
+  ```
+
+## lib_hash について
+
+- 特定の kind の resource は argocd での更新を依存した deployment に伝搬するために、内容の変更に応じて `.metadata.name` を変更する必要がある。
+- そこで `lib_hash` という独自のライブラリを `jsonnetlib/hash.libsonnet` を作った
+- 以下にその利用例を示す。
+
+  ```jsonnet
+  // local name = ...;
+
+  local some_resource = { ... };
+  local some_resource_name = name + '-' + lib_hash {data: some_resource}.output;
+
+  // ...
+
+  [
+    std.mergePatch(some_resource, { metadata: { name: some_resource_name } }),
+    ...,
+  ]
+  ```
+
+  このように基本的には std.mergePatch とセットで利用される。
+
+- このルールが適用される resource kind は以下であり、 `lint-hash.sh` の中で定義されている。
+
+  ```
+  .kind == "ConfigMap"
+  or .kind == "PersistentVolume"
+  or .kind == "PersistentVolumeClaim"
+  or .kind == "OnePasswordItem"
+  ```

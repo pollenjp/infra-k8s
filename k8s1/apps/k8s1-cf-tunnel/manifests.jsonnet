@@ -27,12 +27,19 @@ local configMap = {
             service: 'http://argo-argocd-server.argocd.svc.cluster.local',
           },
           {
-
             hostname: 'grafana.pollenjp.com',
             service: (
               local n = (import '../grafana-grafana/config.json5').name;
               local ns = (import '../grafana-grafana/config.json5').namespace;
               'http://' + n + '.' + ns + '.svc.cluster.local'
+            ),
+          },
+          {
+            hostname: 'minio-console.pollenjp.com',
+            service: (
+              local n = (import '../grafana-loki/config.json5').name + '-minio-console';
+              local ns = (import '../grafana-loki/config.json5').namespace;
+              'http://' + n + '.' + ns + '.svc.cluster.local:9001'
             ),
           },
           {
@@ -64,7 +71,7 @@ local configMap = {
                 // ingress
                 local n = 'cilium-ingress-' + (import '../sandbox-nginx/config.json5').name;
                 local ns = (import '../sandbox-nginx/config.json5').namespace;
-                'https://' + n + '.' + ns + '.svc.cluster.local'
+                'http://' + n + '.' + ns + '.svc.cluster.local:443'
               )
             }
           ),

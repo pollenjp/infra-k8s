@@ -1,5 +1,8 @@
+local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
+
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
+
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
 
@@ -15,6 +18,19 @@ local minio_mc_image = {
   // repository: 'quay.io/minio/mc',
   tag: 'RELEASE.2024-11-21T17-21-54Z-cpuv1', // need '-cpuv1'
 };
+
+local minio_op_item = {
+  apiVersion: 'onepassword.com/v1',
+  kind: 'OnePasswordItem',
+  metadata: {
+    name: 'dummy',
+  },
+  spec: {
+    // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=ovkly32j3sw3on4qfs5uyp4aei&h=my.1password.com
+    itemPath: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/ovkly32j3sw3on4qfs5uyp4aei',
+  }
+};
+local minio_op_item_name = 'minio-' + lib_hash {data: minio_op_item}.output;
 
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
@@ -50,13 +66,39 @@ local helm_app = {
         valuesObject: {
           loki: {
             auth_enabled: false,
+            // storage: {
+            //   type: 's3',
+            //   bucketNames: {
+            //     // TODO: https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L361-L366
+            //     chunks: 'loki-chunks',
+            //     ruler: 'loki-ruler',
+            //     admin: 'loki-admin',
+            //   },
+            //   s3: {
+            //     type: 's3',
+            //     endpoint: 'http://' + namespace + '.' + name + '-minio.svc.cluster.local:9000',
+            //     insecure: true,
+            //     http_config: {
+            //       insecure_skip_verify: true,
+            //     },
+            //   },
+            // },
             schemaConfig: {
               configs: [
                 {
                   from: '2025-06-01',
                   store: 'tsdb',
-                  // object_store: 's3',
                   object_store: 'filesystem',
+                  schema: 'v13',
+                  index: {
+                    prefix: 'loki_index_',
+                    period: '24h',
+                  },
+                },
+                {
+                  from: '2025-06-12',
+                  store: 'tsdb',
+                  object_store: 's3',
                   schema: 'v13',
                   index: {
                     prefix: 'loki_index_',
@@ -94,12 +136,27 @@ local helm_app = {
             enabled: true,
             image: minio_image,
             mcImage: minio_mc_image,
-          },
-          gateway: {
-            service: {
-              type: 'LoadBalancer',
+            // persistence: {
+            //   size: '50Gi',
+            // },
+            // https://github.com/minio/minio/blob/e1fcaebc77ef97bb212adcf764bd262e4155211a/helm/minio/values.yaml#L96-L106
+            // existingSecret
+            // | Chart var             | .data.<key> in Secret    |
+            // |:----------------------|:-------------------------|
+            // | rootUser              | rootUser                 |
+            // | rootPassword          | rootPassword             |
+            // existingSecret: minio_op_item_name,
+            resources: {
+              requests: {
+                memory: '1Gi',
+              },
             },
           },
+          // gateway: {
+          //   service: {
+          //     type: 'LoadBalancer',
+          //   },
+          // },
           chunksCache: {
             allocatedMemory: 4096,
           }
@@ -110,5 +167,6 @@ local helm_app = {
 };
 
 [
+  std.mergePatch(minio_op_item, {metadata: {name: minio_op_item_name}}),
   helm_app,
 ]
