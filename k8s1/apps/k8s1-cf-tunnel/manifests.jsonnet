@@ -46,10 +46,14 @@ local configMap = {
             hostname: 'longhorn.pollenjp.com',
             service: 'http://longhorn-frontend.' + (import '../longhorn/config.json5').namespace + '.svc.cluster.local',
           },
-          {
-            hostname: 'sandbox-http-server-go1.pollenjp.com',
-            service: 'http://cilium-ingress-sandbox-server-ingress.' + (import '../sandbox-http-server-go1/config.json5').namespace + '.svc.cluster.local',
-          },
+          (
+            local n = 'cilium-ingress-' + (import '../sandbox-http-server-go1/config.json5').name;
+            local ns = (import '../sandbox-http-server-go1/config.json5').namespace;
+            {
+              hostname: 'sandbox-http-server-go1.pollenjp.com',
+              service: 'http://' + n + '.' + ns + '.svc.cluster.local',
+            }
+          ),
           {
             hostname: 'sandbox-http-server-go2.pollenjp.com',
             service: 'http://sandbox-http-server-go2-svc.' + (import '../sandbox-http-server-go2/config.json5').namespace + '.svc.cluster.local:8080',
