@@ -4,6 +4,32 @@ local container_name = (import 'config.json5').name + '-container';
 local secret_name = (import 'config.json5').name + '-secret';
 local ingress_name = (import 'config.json5').name;
 
+local ex_secret = {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
+  metadata: {
+    name: (import 'config.json5').name + '-ex-secret',
+  },
+  spec: {
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+    },
+    data: [
+      {
+        secretKey: 'custom-key',
+        remoteRef: {
+          # https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=7l622oxh7m6bi2p73grw35ct3y&h=my.1password.com
+          key: '7l622oxh7m6bi2p73grw35ct3y/password',
+        },
+      }
+    ]
+  },
+};
+
 local deployment = {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -11,11 +37,6 @@ local deployment = {
     name: (import 'config.json5').name,
     labels: {
       'app.kubernetes.io/name': (import 'config.json5').name,
-    },
-    annotations: {
-      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=7l622oxh7m6bi2p73grw35ct3y&h=my.1password.com
-      'operator.1password.io/item-path': 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/7l622oxh7m6bi2p73grw35ct3y',
-      'operator.1password.io/item-name': secret_name,
     },
   },
   spec: {
@@ -51,8 +72,8 @@ local deployment = {
                 name: 'SAMPLE_VAR',
                 valueFrom: {
                   secretKeyRef: {
-                    name: secret_name,
-                    key: 'username',
+                    name: ex_secret.metadata.name,
+                    key: 'custom-key',
                   },
                 },
               },
@@ -127,6 +148,7 @@ local ingress = {
 };
 
 [
+  ex_secret,
   deployment,
   service,
   ingress,
