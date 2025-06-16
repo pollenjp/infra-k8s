@@ -23,10 +23,10 @@ local op_secret_store = {
             key: 'token',
           },
         },
-        // integrationInfo: {
-        //   name: 'integration-info',
-        //   version: 'v1',
-        // },
+        integrationInfo: {
+          name: 'integration-info',
+          version: 'v1',
+        },
       },
     },
   },
