@@ -36,7 +36,30 @@ local helm_app = {
       targetRevision: '0.17.0',
       helm: {
         releaseName: name,
-        // valuesObject: {},
+        valuesObject: {
+          resources: {
+            requests: {
+              cpu: '10m',
+              memory: '50Mi',
+            },
+          },
+          webhook: {
+            resources: {
+              requests: {
+                cpu: '10m',
+                memory: '100Mi',
+              },
+            },
+          },
+          certController: {
+            resources: {
+              requests: {
+                cpu: '2m',
+                memory: '36Mi',
+              },
+            },
+          },
+        },
       },
     },
   },

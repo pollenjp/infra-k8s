@@ -24,8 +24,8 @@ local op_secret_store = {
           },
         },
         integrationInfo: {
-          name: 'integration-info',
-          version: 'v1',
+          name: 'My 1Password Integration',
+          version: 'v1.0.0',
         },
       },
     },
