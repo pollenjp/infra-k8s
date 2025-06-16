@@ -19,18 +19,45 @@ local minio_mc_image = {
   tag: 'RELEASE.2024-11-21T17-21-54Z-cpuv1', // need '-cpuv1'
 };
 
-local minio_op_item = {
-  apiVersion: 'onepassword.com/v1',
-  kind: 'OnePasswordItem',
+local minio_ex_secret = {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
   metadata: {
-    name: 'dummy',
+    name: (import 'config.json5').name + '-ex-secret',
   },
   spec: {
-    // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=ovkly32j3sw3on4qfs5uyp4aei&h=my.1password.com
-    itemPath: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/ovkly32j3sw3on4qfs5uyp4aei',
-  }
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+    },
+    data: [
+      // https://github.com/minio/minio/blob/e1fcaebc77ef97bb212adcf764bd262e4155211a/helm/minio/values.yaml#L96-L106
+      //
+      // existingSecret
+      // | Chart var             | .data.<key> in Secret    |
+      // |:----------------------|:-------------------------|
+      // | rootUser              | rootUser                 |
+      // | rootPassword          | rootPassword             |
+      //
+      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=ovkly32j3sw3on4qfs5uyp4aei&h=my.1password.com
+      {
+        secretKey: 'rootUser',
+        remoteRef: {
+          key: 'ovkly32j3sw3on4qfs5uyp4aei/username',
+        },
+      },
+      {
+        secretKey: 'rootPassword',
+        remoteRef: {
+          key: 'ovkly32j3sw3on4qfs5uyp4aei/password',
+        },
+      },
+    ]
+  },
 };
-local minio_op_item_name = 'minio-' + lib_hash {data: minio_op_item}.output;
 
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
@@ -139,13 +166,7 @@ local helm_app = {
             // persistence: {
             //   size: '50Gi',
             // },
-            // https://github.com/minio/minio/blob/e1fcaebc77ef97bb212adcf764bd262e4155211a/helm/minio/values.yaml#L96-L106
-            // existingSecret
-            // | Chart var             | .data.<key> in Secret    |
-            // |:----------------------|:-------------------------|
-            // | rootUser              | rootUser                 |
-            // | rootPassword          | rootPassword             |
-            // existingSecret: minio_op_item_name,
+            existingSecret: minio_ex_secret.metadata.name,
             resources: {
               requests: {
                 memory: '1Gi',
@@ -167,6 +188,6 @@ local helm_app = {
 };
 
 [
-  std.mergePatch(minio_op_item, {metadata: {name: minio_op_item_name}}),
+  minio_ex_secret,
   helm_app,
 ]
