@@ -5,6 +5,7 @@
   ],
   kubernetes: {
     managerFilePatterns: [
+      // k8s1/apps/some/manifests.jsonnet
       '/^k8s1\/apps\/[^\/]+\/[^\/]+\\.jsonnet$/'
     ],
   },

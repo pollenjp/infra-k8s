@@ -17,15 +17,13 @@ jsonnet "\$jsonnet_file" | jq -r '
   if type == "array" then .[] else . end |
   select(
     .kind == "ConfigMap"
-    or .kind == "PersistentVolume"
-    or .kind == "PersistentVolumeClaim"
     or .kind == "OnePasswordItem"
   ) |
   .metadata.name |
   select(test("'"$hashed_sign"'$") | not)
 ' | while read -r invalid_name; do
   if [[ -n "\$invalid_name" ]]; then
-    echo "Error: ConfigMap '\$invalid_name' in \$jsonnet_file does not match the hashed sign. Use 'hash.libsonnet' to generate the name."
+    echo "Error: '\$invalid_name' in \$jsonnet_file does not match the hashed sign. Use 'hash.libsonnet' to generate the name."
     exit 1
   fi
 done
