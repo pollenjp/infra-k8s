@@ -9,4 +9,28 @@
       '/^k8s1\/apps\/[^\/]+\/[^\/]+\\.jsonnet$/'
     ],
   },
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s1\/apps\/[^\/]+\/[^\/]+\\.jsonnet$/',
+      ],
+      matchStringsStrategy: 'combination',
+      matchStrings: [
+        'repoURL:\\s+["\']?(?<registryUrl>\\S+)["\']',
+        'chart:\\s+["\']?(?<depName>[a-z0-9-]+)["\']',
+        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']',
+      ],
+      datasourceTemplate: 'helm',
+    },
+  ],
+  packageRules: [
+    {
+      matchDatasources: [
+        'kubernetes',
+        'helm',
+      ],
+      minimumReleaseAge: '2 weeks',
+    },
+  ],
 }
