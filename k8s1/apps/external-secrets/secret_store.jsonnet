@@ -12,8 +12,7 @@ local op_secret_store = {
   spec: {
     provider: {
       onepasswordSDK: {
-        // vault: 'tsa4qdut6lvgsrl5xvsvdnmgwe', # 'k8s1'
-        vault: 'k8s1',
+        vault: 'tsa4qdut6lvgsrl5xvsvdnmgwe', # 'k8s1'
         auth: {
           serviceAccountSecretRef: {
             # This 'Secret' resource is created by 'cdk-ansible'
