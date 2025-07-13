@@ -36,7 +36,7 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/prometheus-community/prometheus
       repoURL: 'https://prometheus-community.github.io/helm-charts',
       chart: 'prometheus',
-      targetRevision: '27.20.0',
+      targetRevision: '27.23.0',
       helm: {
         releaseName: name,
         // valuesObject: {},
