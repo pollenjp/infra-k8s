@@ -16,11 +16,12 @@ local op_item_spec = {
 };
 local env = (import '../../env.jsonnet');
 local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
-local secret_name = name + '-smbcreds-' + lib_hash { data: op_item_spec }.output;
+local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
+local secret_name = name + '-smbcreds-' + lib_hash2 { data: op_item_spec }.output;
 
 // https://github.com/kubernetes-csi/csi-driver-smb/blob/master/docs/driver-parameters.md
 
-local pv = {
+local pv = lib_hash2 { data: {
   apiVersion: 'v1',
   kind: 'PersistentVolume',
   metadata: {
@@ -61,14 +62,13 @@ local pv = {
       },
     },
   },
-};
-local pv_name = name + '-' + lib_hash { data: pv }.output;
+}}.output;
 
-local pvc = {
+local pvc = lib_hash2 { data: {
   apiVersion: 'v1',
   kind: 'PersistentVolumeClaim',
   metadata: {
-    name: 'tmp',
+    name: name,
   },
   spec: {
     accessModes: [
@@ -81,8 +81,7 @@ local pvc = {
     },
     storageClassName: 'smb',
   },
-};
-local pvc_name = name + '-' + lib_hash { data: pvc }.output;
+}}.output;
 
 local deployment = {
   apiVersion: 'apps/v1',
@@ -134,7 +133,7 @@ local deployment = {
           {
             name: 'www',
             persistentVolumeClaim: {
-              claimName: pvc_name,
+              claimName: pvc.metadata.name,
             },
           },
         ],
@@ -209,8 +208,8 @@ local ingress = {
 };
 
 [
-  std.mergePatch(pv, { metadata: { name: pv_name } }),
-  std.mergePatch(pvc, { metadata: { name: pvc_name } }),
+  pv,
+  pvc,
   deployment,
   service,
   ingress,
