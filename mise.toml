@@ -1,4 +1,4 @@
-min_version = "2025.6.1"
+min_version = "2025.8.4"
 
 [tasks.gen]
 description = "Convert jsonnet to yaml (use the yaml information by Ansible)"
