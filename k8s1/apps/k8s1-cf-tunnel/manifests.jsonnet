@@ -151,7 +151,7 @@ local deployment = {
         containers: [
           {
             name: 'cloudflared',
-            image: 'mirror.gcr.io/cloudflare/cloudflared:2025.7.0',
+            image: 'mirror.gcr.io/cloudflare/cloudflared:2025.8.0',
             args: [
               'tunnel',
               '--config',
