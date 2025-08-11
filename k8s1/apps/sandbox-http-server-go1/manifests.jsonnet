@@ -1,14 +1,17 @@
-local svc_name = (import 'config.json5').name + '-svc';
-local pod_name = (import 'config.json5').name + '-pod';
-local container_name = (import 'config.json5').name + '-container';
-local secret_name = (import 'config.json5').name + '-secret';
-local ingress_name = (import 'config.json5').name;
+local name = (import 'config.json5').name;
+local svc_name = name + '-svc';
+local pod_name = name + '-pod';
+local container_name = name + '-container';
+local secret_name = name + '-secret';
+local ingress_name = name;
+local lib_hash2 = import '../../../jsonnetlib/hash2.libsonnet';
 
-local ex_secret = {
+
+local ex_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'config.json5').name + '-ex-secret',
+    name: secret_name,
   },
   spec: {
     secretStoreRef: {
@@ -29,7 +32,7 @@ local ex_secret = {
       }
     ]
   },
-};
+} }.output;
 
 local deployment = {
   apiVersion: 'apps/v1',
