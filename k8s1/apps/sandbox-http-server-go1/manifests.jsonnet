@@ -23,7 +23,8 @@ local ex_secret = {
         secretKey: 'custom-key',
         remoteRef: {
           # https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=7l622oxh7m6bi2p73grw35ct3y&h=my.1password.com
-          key: '7l622oxh7m6bi2p73grw35ct3y/password',
+          # password
+          key: '7l622oxh7m6bi2p73grw35ct3y/ho4o6bkehsvs5atdzzhbd37etq',
         },
       }
     ]
