@@ -59,6 +59,25 @@ local minio_ex_secret = {
   },
 };
 
+local node_affinity = {
+  requiredDuringSchedulingIgnoredDuringExecution: {
+    nodeSelectorTerms: [
+      {
+        matchExpressions: [
+          {
+            // nodes having disk allocation capability
+            key: 'storage.longhorn.pollenjp.com/enabled',
+            operator: 'In',
+            values: [
+              'true'
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
@@ -151,6 +170,9 @@ local helm_app = {
           deploymentMode: 'SimpleScalable',
           backend: {
             replicas: 2,
+            affinity: {
+              nodeAffinity: node_affinity,
+            },
           },
           read: {
             replicas: 2,
@@ -158,6 +180,9 @@ local helm_app = {
           write: {
             // replicas: 3, // To ensure data durability with replication
             replicas: 2,
+            affinity: {
+              nodeAffinity: node_affinity,
+            },
           },
           minio: {
             // https://github.com/minio/minio/tree/master/helm/minio
@@ -174,23 +199,7 @@ local helm_app = {
               },
             },
             affinity: {
-              nodeAffinity: {
-                requiredDuringSchedulingIgnoredDuringExecution: {
-                  nodeSelectorTerms: [
-                    {
-                      matchExpressions: [
-                        {
-                          key: 'storage.longhorn.pollenjp.com/enabled',
-                          operator: 'In',
-                          values: [
-                            'true'
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
+              nodeAffinity: node_affinity,
             }
           },
           // gateway: {
