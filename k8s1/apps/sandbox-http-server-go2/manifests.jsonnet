@@ -18,17 +18,38 @@ local container_name = name + '-container';
 
 // Database
 
-local db_op_item = lib_hash2 { data: {
-  apiVersion: 'onepassword.com/v1',
-  kind: 'OnePasswordItem',
+
+local db_ex_secret = {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
   metadata: {
-    name: name + '-db-secret',
+    name: name + '-db-ex-secret',
   },
   spec: {
-    // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=cbzvupr24qufjecn6f5g5ubf2a&h=my.1password.com
-    itemPath: 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/cbzvupr24qufjecn6f5g5ubf2a',
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+    },
+    data: [
+      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=cbzvupr24qufjecn6f5g5ubf2a&h=my.1password.com
+      {
+        secretKey: 'username',
+        remoteRef: {
+          key: 'cbzvupr24qufjecn6f5g5ubf2a/icuusu5dutwimwq7zgjjxpzezi',
+        },
+      },
+      {
+        secretKey: 'password',
+        remoteRef: {
+          key: 'cbzvupr24qufjecn6f5g5ubf2a/sjdgszflp7uf27mbnmwgzmw22e',
+        },
+      },
+    ]
   },
-} }.output;
+};
 
 local db_cm = lib_hash2 { data: {
   apiVersion: "v1",
@@ -170,9 +191,8 @@ local db_deployment = {
                 name: "POSTGRES_PASSWORD",
                 valueFrom: {
                   secretKeyRef: {
-                    name: db_op_item.metadata.name,
-                    // password
-                    key: "sjdgszflp7uf27mbnmwgzmw22e",
+                    name: db_ex_secret.metadata.name,
+                    key: "password",
                   }
                 }
               },
@@ -180,9 +200,8 @@ local db_deployment = {
                 name: "POSTGRES_USER",
                 valueFrom: {
                   secretKeyRef: {
-                    name: db_op_item.metadata.name,
-                    // username
-                    key: "icuusu5dutwimwq7zgjjxpzezi",
+                    name: db_ex_secret.metadata.name,
+                    key: "username",
                   }
                 }
               },
@@ -301,9 +320,8 @@ local deployment = {
                 name: 'DB_USER',
                 valueFrom: {
                   secretKeyRef: {
-                    name: db_op_item.metadata.name,
-                    // username
-                    key: "icuusu5dutwimwq7zgjjxpzezi",
+                    name: db_ex_secret.metadata.name,
+                    key: "username",
                   },
                 }
               },
@@ -311,9 +329,8 @@ local deployment = {
                 name: 'DB_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: db_op_item.metadata.name,
-                    // password
-                    key: "sjdgszflp7uf27mbnmwgzmw22e",
+                    name: db_ex_secret.metadata.name,
+                    key: "password",
                   },
                 },
               },
@@ -353,7 +370,7 @@ local service = {
 };
 
 [
-  db_op_item,
+  db_ex_secret,
   db_cm,
   db_svc,
   db_pvc,
