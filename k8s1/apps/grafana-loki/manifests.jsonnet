@@ -160,6 +160,7 @@ local helm_app = {
             replicas: 2,
           },
           minio: {
+            // https://github.com/minio/minio/tree/master/helm/minio
             enabled: true,
             image: minio_image,
             mcImage: minio_mc_image,
@@ -172,6 +173,25 @@ local helm_app = {
                 memory: '1Gi',
               },
             },
+            affinity: {
+              nodeAffinity: {
+                requiredDuringSchedulingIgnoredDuringExecution: {
+                  nodeSelectorTerms: [
+                    {
+                      matchExpressions: [
+                        {
+                          key: 'storage.longhorn.pollenjp.com/enabled',
+                          operator: 'In',
+                          values: [
+                            'true'
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           },
           // gateway: {
           //   service: {
