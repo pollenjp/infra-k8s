@@ -249,19 +249,39 @@ local db_deployment = {
 
 
 // Backend API server
+local sample_ex_secret = lib_hash2 { data: {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
+  metadata: {
+    name: name + '-sample-ex-secret',
+  },
+  spec: {
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+    },
+    data: [
+      {
+        secretKey: 'sample_var',
+        remoteRef: {
+          // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=7l622oxh7m6bi2p73grw35ct3y&h=my.1password.com
+          key: '7l622oxh7m6bi2p73grw35ct3y/3gih6lcaaccwgfwyqwqkshdm4m/w6hn6f2cayuocg22t6ye4jeily',
+        },
+      },
+    ]
+  }
+} }.output;
 
 local deployment = {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'config.json5').name,
+    name: name,
     labels: {
-      'app.kubernetes.io/name': (import 'config.json5').name,
-    },
-    annotations: {
-      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=7l622oxh7m6bi2p73grw35ct3y&h=my.1password.com
-      'operator.1password.io/item-path': 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/7l622oxh7m6bi2p73grw35ct3y',
-      'operator.1password.io/item-name': (import 'config.json5').name + '-secret',
+      'app.kubernetes.io/name': name,
     },
   },
   spec: {
@@ -297,9 +317,8 @@ local deployment = {
                 name: 'SAMPLE_VAR',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'config.json5').name + '-secret',
-                    // username
-                    key: 'w6hn6f2cayuocg22t6ye4jeily',
+                    name: sample_ex_secret.metadata.name,
+                    key: 'sample_var',
                   },
                 },
               },
@@ -375,6 +394,7 @@ local service = {
   db_svc,
   db_pvc,
   db_deployment,
+  sample_ex_secret,
   deployment,
   service
 ]
