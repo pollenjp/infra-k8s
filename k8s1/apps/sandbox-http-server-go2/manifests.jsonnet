@@ -19,7 +19,7 @@ local container_name = name + '-container';
 // Database
 
 
-local db_ex_secret = {
+local db_ex_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
@@ -49,7 +49,7 @@ local db_ex_secret = {
       },
     ]
   },
-};
+} }.output;
 
 local db_cm = lib_hash2 { data: {
   apiVersion: "v1",
