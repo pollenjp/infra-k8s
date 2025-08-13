@@ -302,7 +302,8 @@ local deployment = {
                 valueFrom: {
                   secretKeyRef: {
                     name: db_op_item.metadata.name,
-                    key: 'username',
+                    // username
+                    key: "icuusu5dutwimwq7zgjjxpzezi",
                   },
                 }
               },
@@ -311,7 +312,8 @@ local deployment = {
                 valueFrom: {
                   secretKeyRef: {
                     name: db_op_item.metadata.name,
-                    key: 'password',
+                    // password
+                    key: "sjdgszflp7uf27mbnmwgzmw22e",
                   },
                 },
               },
