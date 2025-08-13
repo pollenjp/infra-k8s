@@ -85,6 +85,24 @@ local db_svc = {
   }
 };
 
+local node_affinity = {
+  requiredDuringSchedulingIgnoredDuringExecution: {
+    nodeSelectorTerms: [
+      {
+        matchExpressions: [
+          {
+            key: 'storage.longhorn.pollenjp.com/enabled',
+            operator: 'In',
+            values: [
+              'true'
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
 local db_pvc = {
   apiVersion: "v1",
   kind: "PersistentVolumeClaim",
@@ -101,7 +119,7 @@ local db_pvc = {
       requests: {
         storage: "1Gi"
       }
-    }
+    },
   }
 };
 
@@ -133,6 +151,9 @@ local db_deployment = {
         }
       },
       spec: {
+        affinity: {
+          nodeAffinity: node_affinity,
+        },
         containers: [
           {
             name: db_container_name,
