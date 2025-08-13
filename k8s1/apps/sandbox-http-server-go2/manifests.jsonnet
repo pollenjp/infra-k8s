@@ -38,13 +38,13 @@ local db_ex_secret = lib_hash2 { data: {
       {
         secretKey: 'username',
         remoteRef: {
-          key: 'cbzvupr24qufjecn6f5g5ubf2a/icuusu5dutwimwq7zgjjxpzezi',
+          key: 'cbzvupr24qufjecn6f5g5ubf2a/rpwz4d2vgdjnwri6fg437ru2f4/icuusu5dutwimwq7zgjjxpzezi',
         },
       },
       {
         secretKey: 'password',
         remoteRef: {
-          key: 'cbzvupr24qufjecn6f5g5ubf2a/sjdgszflp7uf27mbnmwgzmw22e',
+          key: 'cbzvupr24qufjecn6f5g5ubf2a/rpwz4d2vgdjnwri6fg437ru2f4/sjdgszflp7uf27mbnmwgzmw22e',
         },
       },
     ]
