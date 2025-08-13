@@ -64,6 +64,25 @@ local helm_app = {
             enabled: true,
             type: 'ClusterIP',
           },
+          affinity: {
+            nodeAffinity: {
+              requiredDuringSchedulingIgnoredDuringExecution: {
+                nodeSelectorTerms: [
+                  {
+                    matchExpressions: [
+                      {
+                        key: 'storage.longhorn.pollenjp.com/enabled',
+                        operator: 'In',
+                        values: [
+                          'true'
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
           datasources: {
             'datasources.yaml': {
               apiVersion: 1,
