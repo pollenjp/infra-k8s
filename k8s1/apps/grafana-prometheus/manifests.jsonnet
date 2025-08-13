@@ -58,13 +58,17 @@ local helm_app = {
         // https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
         releaseName: name,
         valuesObject: {
-          affinity: {
-            nodeAffinity: node_affinity,
-          }
-        },
-        // https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
-        alertmanager: {
-          nodeAffinity: node_affinity,
+          server: {
+            affinity: {
+              nodeAffinity: node_affinity,
+            },
+          },
+          // https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
+          alertmanager: {
+            affinity: {
+              nodeAffinity: node_affinity,
+            },
+          },
         },
       },
     },
