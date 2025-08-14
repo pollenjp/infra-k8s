@@ -165,52 +165,52 @@ local service = {
   },
 };
 
-local ingress = {
-  apiVersion: 'networking.k8s.io/v1',
-  kind: 'Ingress',
-  metadata: {
-    name: ingress_name,
-    annotations: {
-      'cert-manager.io/cluster-issuer': issuer_name,
-    },
-  },
-  spec: {
-    rules: [
-      {
-        host: public_domain,
-        http: {
-          paths: [
-            {
-              path: '/',
-              pathType: 'Prefix',
-              backend: {
-                service: {
-                  name: service_name,
-                  port: {
-                    number: service.spec.ports[0].targetPort,
-                  },
-                },
-              }
-            }
-          ]
-        }
-      }
-    ],
-    tls: [
-      {
-        hosts: [
-          public_domain,
-        ],
-        secretName: public_domain + '-tls',
-      }
-    ]
-  }
-};
+// local ingress = {
+//   apiVersion: 'networking.k8s.io/v1',
+//   kind: 'Ingress',
+//   metadata: {
+//     name: ingress_name,
+//     annotations: {
+//       'cert-manager.io/cluster-issuer': issuer_name,
+//     },
+//   },
+//   spec: {
+//     rules: [
+//       {
+//         host: public_domain,
+//         http: {
+//           paths: [
+//             {
+//               path: '/',
+//               pathType: 'Prefix',
+//               backend: {
+//                 service: {
+//                   name: service_name,
+//                   port: {
+//                     number: service.spec.ports[0].targetPort,
+//                   },
+//                 },
+//               }
+//             }
+//           ]
+//         }
+//       }
+//     ],
+//     tls: [
+//       {
+//         hosts: [
+//           public_domain,
+//         ],
+//         secretName: public_domain + '-tls',
+//       }
+//     ]
+//   }
+// };
 
 [
   // pv,
   // pvc,
   deployment,
   service,
-  ingress,
+  // ingress,
 ]

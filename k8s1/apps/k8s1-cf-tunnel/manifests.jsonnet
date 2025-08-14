@@ -72,10 +72,9 @@ local configMap = {
             {
               hostname: public_domain,
               service: (
-                // ingress
-                local n = 'cilium-ingress-' + (import '../sandbox-nginx/config.json5').name;
+                local n = (import '../sandbox-nginx/config.json5').name;
                 local ns = (import '../sandbox-nginx/config.json5').namespace;
-                'http://' + n + '.' + ns + '.svc.cluster.local:443'
+                'http://' + n + '.' + ns + '.svc.cluster.local:8080'
               )
             }
           ),
