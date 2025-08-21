@@ -1,1 +1,3 @@
 .*.gen.yaml
+bin/jq
+bin/yq
