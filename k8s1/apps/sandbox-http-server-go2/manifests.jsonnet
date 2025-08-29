@@ -301,7 +301,7 @@ local deployment = {
         containers: [
           {
             name: container_name,
-            image: 'ghcr.io/pollenjp/sandbox-http-server-go:0.1.17',
+            image: 'ghcr.io/pollenjp/sandbox-http-server-go:0.2.0',
             imagePullPolicy: 'Always',
             ports: [
               {
