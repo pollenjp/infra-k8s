@@ -1,4 +1,4 @@
-local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
+local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
@@ -19,7 +19,7 @@ local minio_mc_image = {
   tag: 'RELEASE.2024-11-21T17-21-54Z-cpuv1', // need '-cpuv1'
 };
 
-local minio_ex_secret = {
+local minio_ex_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
@@ -57,7 +57,7 @@ local minio_ex_secret = {
       },
     ]
   },
-};
+} }.output;
 
 local node_affinity = {
   requiredDuringSchedulingIgnoredDuringExecution: {
