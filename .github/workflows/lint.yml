@@ -15,15 +15,6 @@ jobs:
           cache: true # [default: true] cache mise using GitHub's cache
           log_level: debug # [default: info] log level
           working_directory: .
-      - name: Install dependencies
-        run: |
-          #####
-          ## jq is already installed in the base environment
-          ######
-          # sudo apt-get install -y jq
-
-          go install github.com/google/go-jsonnet/cmd/jsonnet@latest
-          echo "$HOME/go/bin" >> $GITHUB_PATH
       - run: mise run lint
   gen:
     runs-on: ubuntu-latest
@@ -36,13 +27,4 @@ jobs:
           cache: true # [default: true] cache mise using GitHub's cache
           log_level: debug # [default: info] log level
           working_directory: .
-      - name: Install dependencies
-        run: |
-          #####
-          ## jq is already installed in the base environment
-          ######
-          # sudo apt-get install -y jq
-
-          go install github.com/google/go-jsonnet/cmd/jsonnet@latest
-          echo "$HOME/go/bin" >> $GITHUB_PATH
       - run: mise run gen
