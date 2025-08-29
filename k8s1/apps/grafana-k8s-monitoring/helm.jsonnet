@@ -8,6 +8,7 @@ local target_namespaces = [
   'argocd',
   (import '../sandbox-http-server-go1/config.json5').namespace,
   (import '../sandbox-http-server-go2/config.json5').namespace,
+  (import '../echo-slack-bot-rs/config.json5').namespace,
 ];
 
 local helm_app = {
@@ -36,6 +37,7 @@ local helm_app = {
     },
     source: {
       // https://grafana.com/docs/loki/latest/send-data/k8s-monitoring-helm/#deploy-the-kubernetes-monitoring-helm-chart
+      // https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring
       // https://artifacthub.io/packages/helm/grafana/k8s-monitoring
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'k8s-monitoring',
