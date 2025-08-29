@@ -41,7 +41,7 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/grafana/k8s-monitoring
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'k8s-monitoring',
-      targetRevision: '2.1.4',
+      targetRevision: '3.2.7',
       helm: {
         releaseName: name,
         valuesObject: {
