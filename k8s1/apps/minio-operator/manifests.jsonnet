@@ -57,11 +57,22 @@ local helm_app = {
       helm: {
         releaseName: name,
         valuesObject: {
-            operator: {
-              affinity: {
-                nodeAffinity: node_affinity,
+          operator: {
+            env: [
+              {
+                name: "OPERATOR_STS_ENABLED",
+                value: "on",
               },
-            }
+              {
+                // https://docs.min.io/community/minio-object-store/operations/cert-manager/cert-manager-operator.html#install-operator-with-auto-tls-disabled
+                name: "OPERATOR_STS_AUTO_TLS_ENABLED",
+                value: "off",
+              },
+            ],
+            affinity: {
+              nodeAffinity: node_affinity,
+            },
+          }
         },
       },
     },
