@@ -69,6 +69,5 @@ local helm_app = {
 };
 
 [
-  minio_ex_secret,
   helm_app,
 ]
