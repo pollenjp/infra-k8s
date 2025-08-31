@@ -42,15 +42,15 @@ local configMap = {
               'http://' + n + '.' + ns + '.svc.cluster.local:9001'
             ),
           },
-          {
-            hostname: 'myminio-console.pollenjp.com',
-            service: (
-              local tenant_name = (import '../minio-tenant/config.libsonnet').tenant_name;
-              local n = tenant_name + '-console';
-              local ns = (import '../minio-tenant/config.json5').namespace;
-              'http://' + n + '.' + ns + '.svc.cluster.local:9090'
-            ),
-          },
+          // {
+          //   hostname: 'myminio-console.pollenjp.com',
+          //   service: (
+          //     local tenant_name = (import '../minio-tenant/config.libsonnet').tenant_name;
+          //     local n = tenant_name + '-console';
+          //     local ns = (import '../minio-tenant/config.json5').namespace;
+          //     'http://' + n + '.' + ns + '.svc.cluster.local:9090'
+          //   ),
+          // },
           {
             hostname: 'longhorn.pollenjp.com',
             service: 'http://longhorn-frontend.' + (import '../longhorn/config.json5').namespace + '.svc.cluster.local',

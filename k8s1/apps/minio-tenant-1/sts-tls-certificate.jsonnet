@@ -13,17 +13,14 @@ local certificate = lib_hash2 { data: {
   },
   spec: {
     dnsNames:[
-      'sts',
-      'sts.' + namespace + '.svc',
-      'sts.' + namespace + '.svc.cluster.local',
+       "minio." + namespace + "",
+       "minio." + namespace + ".svc",
+       'minio." + namespace + ".svc.cluster.local',
+       '*.minio.' + namespace + '.svc.cluster.local',
+       '*.' + name + '-hl.' + namespace + '.svc.cluster.local',
+       '*.' + name + '.minio.' + namespace + '.svc.cluster.local',
     ],
-    // https://docs.min.io/community/minio-object-store/operations/cert-manager/cert-manager-operator.html#id4
-    // > The STS service will not start if the sts-tls secret, containing the TLS certificate,
-    // > is missing or contains an invalid key-value pair.
-    //
-    // the name is hard coded in the controller
-    // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/pkg/controller/sts.go#L55-L56
-    secretName: 'sts-tls',
+    secretName: name + '-sts-tls',
     issuerRef: {
       name: (import 'ca-issuer.jsonnet').metadata.name,
     },

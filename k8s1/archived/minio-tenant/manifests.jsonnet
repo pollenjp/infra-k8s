@@ -16,7 +16,7 @@ local ex_secret = lib_hash2 { data: {
   spec: {
     secretStoreRef: {
       kind: 'ClusterSecretStore',
-      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+      name: (import '../../apps/external-secrets/secret_store.jsonnet').metadata.name,
     },
     target: {
       creationPolicy: 'Owner',
