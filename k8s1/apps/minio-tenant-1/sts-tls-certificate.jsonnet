@@ -15,7 +15,7 @@ local certificate = lib_hash2 { data: {
     dnsNames:[
        "minio." + namespace + "",
        "minio." + namespace + ".svc",
-       'minio." + namespace + ".svc.cluster.local',
+       'minio.' + namespace + '.svc.cluster.local',
        '*.minio.' + namespace + '.svc.cluster.local',
        '*.' + name + '-hl.' + namespace + '.svc.cluster.local',
        '*.' + name + '.minio.' + namespace + '.svc.cluster.local',

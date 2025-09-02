@@ -3,6 +3,49 @@ local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
 
+local minio_configuration = lib_hash2 { data: {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
+  metadata: {
+    name: name + '-ex-secret',
+  },
+  spec: {
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../../apps/external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+      template: {
+        engineVersion: 'v2',
+        data: {
+          // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/helm/tenant/values.yaml#L75-L122
+          // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/helm/tenant/templates/tenant-configuration.yaml#L16-L18
+          'config.env': |||
+            export MINIO_ROOT_USER={{ .rootUser }}
+            export MINIO_ROOT_PASSWORD={{ .rootPassword }}
+          |||,
+        },
+      }
+    },
+    data: [
+      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=ovkly32j3sw3on4qfs5uyp4aei&h=my.1password.com
+      {
+        secretKey: 'rootUser',
+        remoteRef: {
+          key: 'ovkly32j3sw3on4qfs5uyp4aei/6xvsukjqnua2qmfhfzrdx65fpa/gcl7whpcuvza5x5mjc6v2og6fm',
+        },
+      },
+      {
+        secretKey: 'rootPassword',
+        remoteRef: {
+          key: 'ovkly32j3sw3on4qfs5uyp4aei/6xvsukjqnua2qmfhfzrdx65fpa/acyadgpgfgsc6oao6otgi6gacu',
+        },
+      },
+    ],
+  },
+} }.output;
+
 local node_affinity = {
   requiredDuringSchedulingIgnoredDuringExecution: {
     nodeSelectorTerms: [
@@ -53,10 +96,10 @@ local tenant = {
             },
             // storageClassName: '',
           },
-          affinity: {
-            nodeAffinity: node_affinity,
-          }
-        }
+        },
+        affinity: {
+          nodeAffinity: node_affinity,
+        },
       }
     ],
     // cpuv1
@@ -71,9 +114,14 @@ local tenant = {
         type: (import 'sts-tls-certificate.jsonnet').apiVersion,
       },
     ],
+    configuration: {
+      // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/helm/tenant/values.yaml#L75-L122
+      name: minio_configuration.metadata.name,
+    },
   },
 };
 
 [
+  minio_configuration,
   tenant,
 ]
