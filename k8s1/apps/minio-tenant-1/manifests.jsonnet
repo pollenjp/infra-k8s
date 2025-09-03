@@ -3,6 +3,38 @@ local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
 
+local minio_user0_secret = lib_hash2 { data: {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
+  metadata: {
+    name: (import 'config.json5').name + '-ex-secret',
+  },
+  spec: {
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      template: {
+        engineVersion: 'v2',
+        data: {
+          'CONSOLE_ACCESS_KEY': 'logs-user',
+          'CONSOLE_SECRET_KEY': '{{ .users0_secret_key }}',
+        },
+      },
+    },
+    data: [
+      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=ovkly32j3sw3on4qfs5uyp4aei&h=my.1password.com
+      {
+        secretKey: 'users0_secret_key',
+        remoteRef: {
+          key: 'ovkly32j3sw3on4qfs5uyp4aei/6xvsukjqnua2qmfhfzrdx65fpa/2v3ydlsmkkalx562zcabwogbeq',
+        },
+      }
+    ]
+  },
+} }.output;
+
 local minio_configuration = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
@@ -15,7 +47,6 @@ local minio_configuration = lib_hash2 { data: {
       name: (import '../../apps/external-secrets/secret_store.jsonnet').metadata.name,
     },
     target: {
-      creationPolicy: 'Owner',
       template: {
         engineVersion: 'v2',
         data: {
@@ -118,6 +149,11 @@ local tenant = {
       // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/helm/tenant/values.yaml#L75-L122
       name: minio_configuration.metadata.name,
     },
+    users: [
+      {
+        name: minio_user0_secret.metadata.name,
+      },
+    ],
     buckets: [
       {
         name: 'loki-chunks',
@@ -133,6 +169,7 @@ local tenant = {
 };
 
 [
+  minio_user0_secret,
   minio_configuration,
   tenant,
 ]
