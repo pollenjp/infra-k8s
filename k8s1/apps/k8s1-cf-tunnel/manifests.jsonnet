@@ -48,7 +48,7 @@ local configMap = {
               local tenant_name = (import '../minio-tenant-1/config.json5').name;
               local n = tenant_name + '-console';
               local ns = (import '../minio-tenant-1/config.json5').namespace;
-              'http://' + n + '.' + ns + '.svc.cluster.local:9443'
+              'http://' + n + '.' + ns + '.svc.cluster.local:9090'
             ),
           },
           {
