@@ -118,6 +118,17 @@ local tenant = {
       // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/helm/tenant/values.yaml#L75-L122
       name: minio_configuration.metadata.name,
     },
+    buckets: [
+      {
+        name: 'loki-chunks',
+      },
+      {
+        name: 'loki-ruler',
+      },
+      {
+        name: 'loki-admin',
+      },
+    ],
   },
 };
 
