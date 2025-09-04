@@ -120,25 +120,25 @@ local helm_app = {
         valuesObject: {
           loki: {
             auth_enabled: false,
-            storage: {
-              type: 's3',
-              // bucketNames: {
-              //   // TODO: https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L361-L366
-              //   chunks: 'loki-chunks',
-              //   ruler: 'loki-ruler',
-              //   admin: 'loki-admin',
-              // },
-              s3: {
-                type: 's3',
-                endpoint: 'http://' + name + '-minio.' + namespace + '.svc.cluster.local:9000',
-                insecure: true,
-                http_config: {
-                  insecure_skip_verify: true,
-                },
-                // accessKeyId: '',
-                // secretAccessKey: '',
-              },
-            },
+            // storage: {
+            //   type: 's3',
+            //   // bucketNames: {
+            //   //   // TODO: https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L361-L366
+            //   //   chunks: 'loki-chunks',
+            //   //   ruler: 'loki-ruler',
+            //   //   admin: 'loki-admin',
+            //   // },
+            //   s3: {
+            //     type: 's3',
+            //     endpoint: 'http://' + name + '-minio.' + namespace + '.svc.cluster.local:9000',
+            //     insecure: true,
+            //     http_config: {
+            //       insecure_skip_verify: true,
+            //     },
+            //     // accessKeyId: '',
+            //     // secretAccessKey: '',
+            //   },
+            // },
             // storage_config: {
             //   aws: {
             //     // endpoint: 'http://' + namespace + '.' + name + '-minio.svc.cluster.local:9000',
@@ -203,41 +203,41 @@ local helm_app = {
               nodeAffinity: node_affinity,
             },
           },
-          minio: {
-            // https://github.com/minio/minio/tree/master/helm/minio
-            enabled: true,
-            image: minio_image,
-            mcImage: minio_mc_image,
-            // persistence: {
-            //   size: '50Gi',
-            // },
-            //
-            // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/helm/minio/values.yaml#L96-L106
-            // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L3476-L3478
-            existingSecret: minio_ex_secret.metadata.name,
-            users: [
-              // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/helm/minio/values.yaml#L369-L382
-              //
-              // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L3479-L3485
-              // > The first user in the list below is used for Loki/GEL authentication.
-              // > You can add additional users if desired; they will not impact Loki/GEL.
-              // > `accessKey` = username, `secretKey` = password
-              {
-                accessKey: 'logs-user',
-                existingSecret: minio_ex_secret.metadata.name,
-                existingSecretKey: 'user0_secret_key',
-                policy: 'readwrite',
-              }
-            ],
-            resources: {
-              requests: {
-                memory: '1Gi',
-              },
-            },
-            affinity: {
-              nodeAffinity: node_affinity,
-            }
-          },
+          // minio: {
+          //   // https://github.com/minio/minio/tree/master/helm/minio
+          //   enabled: true,
+          //   image: minio_image,
+          //   mcImage: minio_mc_image,
+          //   // persistence: {
+          //   //   size: '50Gi',
+          //   // },
+          //   //
+          //   // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/helm/minio/values.yaml#L96-L106
+          //   // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L3476-L3478
+          //   existingSecret: minio_ex_secret.metadata.name,
+          //   users: [
+          //     // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/helm/minio/values.yaml#L369-L382
+          //     //
+          //     // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L3479-L3485
+          //     // > The first user in the list below is used for Loki/GEL authentication.
+          //     // > You can add additional users if desired; they will not impact Loki/GEL.
+          //     // > `accessKey` = username, `secretKey` = password
+          //     {
+          //       accessKey: 'logs-user',
+          //       existingSecret: minio_ex_secret.metadata.name,
+          //       existingSecretKey: 'user0_secret_key',
+          //       policy: 'readwrite',
+          //     }
+          //   ],
+          //   resources: {
+          //     requests: {
+          //       memory: '1Gi',
+          //     },
+          //   },
+          //   affinity: {
+          //     nodeAffinity: node_affinity,
+          //   }
+          // },
           // gateway: {
           //   service: {
           //     type: 'LoadBalancer',
