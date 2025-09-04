@@ -7,7 +7,7 @@ local minio_user0_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'config.json5').name + '-ex-secret',
+    name: (import 'config.json5').name + '-user0-secret',
   },
   spec: {
     secretStoreRef: {
@@ -18,7 +18,7 @@ local minio_user0_secret = lib_hash2 { data: {
       template: {
         engineVersion: 'v2',
         data: {
-          'CONSOLE_ACCESS_KEY': 'logs-user',
+          'CONSOLE_ACCESS_KEY': 'loki-logs-user',
           'CONSOLE_SECRET_KEY': '{{ .users0_secret_key }}',
         },
       },
