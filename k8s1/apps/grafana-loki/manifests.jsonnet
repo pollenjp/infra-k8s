@@ -108,7 +108,7 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/grafana/loki
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'loki',
-      targetRevision: '6.30.1',
+      targetRevision: '6.37.0',
       helm: {
         releaseName: name,
         valuesObject: {
