@@ -208,7 +208,10 @@ local helm_app = {
                 // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/vendor/github.com/aws/aws-sdk-go-v2/config/resolve_credentials.go#L480-L482
                 name: 'AWS_ROLE_ARN',
                 // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/internal/arn/arn.go#L27-L40
-                value: 'arn:minio:iam::dummy:role/test', // dummy role arn
+                // arn:partition:service:region:account-id:resource-type/resource-id
+                // - empty region
+                // - empty account-id
+                value: 'arn:minio:iam:::role/dummy', // dummy role arn
               },
             ],
             extraVolumes: [
