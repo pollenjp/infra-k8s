@@ -1,4 +1,5 @@
 {
   "name": "loki",
   "namespace": "loki",
+  "service_account_name": "loki-sa",
 }
