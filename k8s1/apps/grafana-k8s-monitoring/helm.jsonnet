@@ -9,6 +9,7 @@ local target_namespaces = [
   (import '../sandbox-http-server-go1/config.json5').namespace,
   (import '../sandbox-http-server-go2/config.json5').namespace,
   (import '../echo-slack-bot-rs/config.json5').namespace,
+  (import '../sandbox-nginx/config.json5').namespace,
 ];
 
 local helm_app = {
