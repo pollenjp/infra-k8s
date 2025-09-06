@@ -4,11 +4,13 @@ local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
 
 // https://docs.min.io/community/minio-object-store/operations/cert-manager/cert-manager-operator.html
+//
+// it is easy to use trust-manager for delivery of the certificate
 local certificate = lib_hash2 { data: {
   apiVersion: 'cert-manager.io/v1',
   kind: 'Certificate',
   metadata: {
-    name: name + '-sts-cert',
+    name: name,
     namespace: namespace,
   },
   spec: {
@@ -20,11 +22,17 @@ local certificate = lib_hash2 { data: {
        '*.' + name + '-hl.' + namespace + '.svc.cluster.local',
        '*.' + name + '.minio.' + namespace + '.svc.cluster.local',
     ],
-    secretName: name + '-sts-tls',
+    secretName: '', // embed later for hash
     issuerRef: {
-      name: (import 'ca-issuer.jsonnet').metadata.name,
+      name: (import '../trust-manager/ca-issuer.jsonnet').metadata.name,
+      kind: 'ClusterIssuer',
     },
   },
 } }.output;
 
-certificate
+std.mergePatch(certificate, {
+  metadata: { name: certificate.metadata.name + '-sts-cert' },
+  spec: {
+    secretName: certificate.metadata.name + '-sts-tls',
+  },
+})

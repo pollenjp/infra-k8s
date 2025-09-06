@@ -41,7 +41,13 @@ local helm_app = {
             trust: {
               namespace: namespace,
             }
-          }
+          },
+          secretTargets: {
+            enabled: true,
+            authorizedSecrets: [
+              (import './minio-ca-cert.jsonnet').metadata.name,
+            ]
+          },
         },
       },
     },
