@@ -25,7 +25,8 @@ local certificate = lib_hash2 { data: {
     // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/pkg/controller/sts.go#L55-L56
     secretName: 'sts-tls',
     issuerRef: {
-      name: (import 'ca-issuer.jsonnet').metadata.name,
+      name: (import '../trust-manager/ca-issuer.jsonnet').metadata.name,
+      kind: 'ClusterIssuer',
     },
   },
 } }.output;

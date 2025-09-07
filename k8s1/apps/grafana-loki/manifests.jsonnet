@@ -76,6 +76,11 @@ local node_affinity = {
   }
 };
 
+local internal_ca_configmap = (import '../trust-manager/trust-bundle.jsonnet');
+local internal_ca_bundle_volume_name = 'internal-trust-bundle';
+// local internal_ca_path = '/tls/internal/' + internal_ca_configmap.spec.target.configMap.key;
+local internal_ca_path = '/etc/ssl/certs/' + internal_ca_configmap.spec.target.configMap.key;
+
 local sts_token_name = 'minio-sts-token';
 local sts_token_path = '/var/run/secrets/sts.min.io/serviceaccount/token';
 
@@ -108,17 +113,19 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/grafana/loki
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'loki',
-      targetRevision: '6.30.1',
+      targetRevision: '6.39.0',
       helm: {
         releaseName: name,
         valuesObject: {
+          serviceAccount: {
+            // Define clearly for policy binding
+            // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/templates/_helpers.tpl#L147-L156^C
+            name: service_account_name,
+          },
           loki: {
             auth_enabled: false,
-            serviceAccount: {
-              // Define clearly for policy binding
-              // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/templates/_helpers.tpl#L147-L156^C
-              name: service_account_name,
-            },
+            // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L358-L359
+            // > -- In case of using thanos storage, enable use_thanos_objstore and the configuration should be done inside the object_store section.
             storage: {
               type: 's3',
               bucketNames: {
@@ -128,18 +135,29 @@ local helm_app = {
                 ruler: 'loki-ruler',
                 admin: 'loki-admin',
               },
-              s3: {
+              use_thanos_objstore: true,
+              object_store: {
                 type: 's3',
-                endpoint: 'http://minio.' + minio_tenant.namespace + '.svc.cluster.local:80',
-                insecure: true,
-                http_config: {
-                  insecure_skip_verify: true,
+                s3: {
+                  endpoint: 'minio.' + minio_tenant.namespace + '.svc.cluster.local',
+                  insecure: true,
+                  // https://github.com/grafana/loki/blob/cadc8240153597608b59821047345064981d1019/pkg/storage/bucket/s3/config.go#L77
+                  http: {
+                    insecure_skip_verify: true,
+                    tls_ca_path: internal_ca_path,
+                  },
+                  // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/pkg/controller/sts.go#L269-L271
+                  sts_endpoint: 'https://sts.' + minio_operator.namespace + '.svc.cluster.local:4223/sts/' + minio_tenant.namespace,
+                  // https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access
+                  bucket_lookup_type: 'path',
+                  trace: {
+                    enabled: true,
+                  },
                 },
-                // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/pkg/controller/sts.go#L269-L271
-                sts_endpoint: 'https://sts.' + minio_operator.namespace + '.svc.cluster.local:4223/sts/' + minio_tenant.namespace,
-                // https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access
-                bucket_lookup_type: 'path',
               },
+            },
+            storage_config: {
+              use_thanos_objstore: true,
             },
             schemaConfig: {
               configs: [
@@ -208,8 +226,15 @@ local helm_app = {
                 // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/vendor/github.com/aws/aws-sdk-go-v2/config/resolve_credentials.go#L480-L482
                 name: 'AWS_ROLE_ARN',
                 // https://github.com/minio/minio/blob/f0b91e5504663c4672da451877857b57c3345295/internal/arn/arn.go#L27-L40
-                value: 'arn:minio:iam::dummy:role/test', // dummy role arn
+                // arn:partition:service:region:account-id:resource-type/resource-id
+                // - empty region
+                // - empty account-id
+                value: 'arn:minio:iam:::policy/readwrite', // dummy value
               },
+              {
+                name: 'AWS_CA_BUNDLE',
+                value: internal_ca_path,
+              }
             ],
             extraVolumes: [
               {
@@ -227,6 +252,12 @@ local helm_app = {
                   ],
                 },
               },
+              {
+                name: internal_ca_bundle_volume_name,
+                configMap: {
+                  name: internal_ca_configmap.metadata.name,
+                },
+              }
             ],
             extraVolumeMounts: [
               {
@@ -234,8 +265,18 @@ local helm_app = {
                 mountPath: std.splitLimitR(sts_token_path, '/', 1)[0],
                 readOnly: true,
               },
+              {
+                name: internal_ca_bundle_volume_name,
+                mountPath: std.splitLimitR(internal_ca_path, '/', 1)[0],
+                readOnly: true,
+              }
             ],
           },
+          sidecar: {
+            rules: {
+              logLevel: 'DEBUG',
+            }
+          }
         },
       },
     },

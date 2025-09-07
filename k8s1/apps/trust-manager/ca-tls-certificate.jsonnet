@@ -8,20 +8,20 @@ local certificate = lib_hash2 { data: {
   apiVersion: 'cert-manager.io/v1',
   kind: 'Certificate',
   metadata: {
-    name: name + '-ca-certificate',
+    name: name,
     namespace: namespace,
   },
   spec: {
     isCA: true,
-    commonName: name + '-ca',
-    secretName: name + '-ca-tls',
+    commonName: name,
+    secretName: '', // embed later
     duration: '70128h', // 8y
     privateKey: {
       algorithm: 'ECDSA',
       size: 256,
     },
     issuerRef: (
-      local root_clusterissuer = (import '../minio-operator/selfsigned-root-clusterissuer.jsonnet');
+      local root_clusterissuer = (import 'selfsigned-root-clusterissuer.jsonnet');
       {
         name: root_clusterissuer.metadata.name,
         kind: root_clusterissuer.kind,
@@ -31,4 +31,10 @@ local certificate = lib_hash2 { data: {
   },
 } }.output;
 
-certificate
+
+std.mergePatch(certificate, {
+  metadata: { name: certificate.metadata.name + '-ca-certificate' },
+  spec: {
+    secretName: certificate.metadata.name + '-ca-tls',
+  },
+})
