@@ -33,7 +33,7 @@ local helm_app = {
       // https://charts.longhorn.io/
       repoURL: 'https://charts.longhorn.io',
       chart: 'longhorn',
-      targetRevision: '1.9.0',
+      targetRevision: '1.9.1',
       helm: {
         releaseName: name,
         valuesObject: {
