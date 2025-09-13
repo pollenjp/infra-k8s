@@ -1,0 +1,12 @@
+{
+  "name": "mimir",
+  "namespace": "mimir",
+  // Used in "../minio-tenant-1/policy-binding.jsonnet"
+  "service_account_name": "mimir-sa",
+  // Used in "../minio-tenant-1/manifests.jsonnet"
+  "buckets": [
+    {
+      "name": "mimir-chunks",
+    },
+  ],
+}

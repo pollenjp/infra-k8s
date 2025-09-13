@@ -3,12 +3,21 @@ local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 local name = (import 'config.json5').name;
 local namespace = (import 'config.json5').namespace;
 local service_account_name = (import 'config.json5').service_account_name;
+local buckets = (import 'config.json5').buckets;
 
 local minio_tenant = (import '../minio-tenant-1/config.json5');
 local minio_operator = (import '../minio-operator/config.json5');
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
+
+local internal_ca_configmap = (import '../trust-manager/trust-bundle.jsonnet');
+local internal_ca_bundle_volume_name = 'internal-trust-bundle';
+// local internal_ca_path = '/tls/internal/' + internal_ca_configmap.spec.target.configMap.key;
+local internal_ca_path = '/etc/ssl/certs/' + internal_ca_configmap.spec.target.configMap.key;
+
+local sts_token_name = 'minio-sts-token';
+local sts_token_path = '/var/run/secrets/sts.min.io/serviceaccount/token';
 
 local minio_ex_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
@@ -76,14 +85,6 @@ local node_affinity = {
   }
 };
 
-local internal_ca_configmap = (import '../trust-manager/trust-bundle.jsonnet');
-local internal_ca_bundle_volume_name = 'internal-trust-bundle';
-// local internal_ca_path = '/tls/internal/' + internal_ca_configmap.spec.target.configMap.key;
-local internal_ca_path = '/etc/ssl/certs/' + internal_ca_configmap.spec.target.configMap.key;
-
-local sts_token_name = 'minio-sts-token';
-local sts_token_path = '/var/run/secrets/sts.min.io/serviceaccount/token';
-
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
@@ -130,10 +131,11 @@ local helm_app = {
               type: 's3',
               bucketNames: {
                 // https://github.com/grafana/loki/blob/755e9fc14fd3a1a609e897515d9f04553a6407a5/production/helm/loki/values.yaml#L361-L366
-                // TODO: modify hard coding
-                chunks: 'loki-chunks',
-                ruler: 'loki-ruler',
-                admin: 'loki-admin',
+                // chunks: 'loki-chunks',
+                // ruler: 'loki-ruler',
+                // admin: 'loki-admin',
+                [bucket.loki_name]: bucket.minio_name
+                for bucket in buckets
               },
               use_thanos_objstore: true,
               object_store: {
