@@ -59,6 +59,11 @@ local helm_app = {
         releaseName: name,
         valuesObject: {
           server: {
+            persistentVolume: {
+              size: '8Gi',
+            },
+            // Prometheus' data retention size. Supported units: B, KB, MB, GB, TB, PB, EB.
+            retentionSize: '5GB',
             affinity: {
               nodeAffinity: node_affinity,
             },

@@ -185,6 +185,7 @@ local helm_app = {
             limits_config: {
               allow_structured_metadata: true,
               volume_enabled: true,
+              retention_period: '2d',
             },
           },
           deploymentMode: 'SimpleScalable',
