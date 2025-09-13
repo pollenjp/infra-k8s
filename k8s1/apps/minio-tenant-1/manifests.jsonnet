@@ -157,14 +157,14 @@ local tenant = {
     ],
     buckets: [
       {
-        name: 'loki-chunks',
-      },
+        name: bucket.minio_name,
+      }
+      for bucket in (import '../grafana-loki/config.json5').buckets
+    ] + [
       {
-        name: 'loki-ruler',
-      },
-      {
-        name: 'loki-admin',
-      },
+        name: bucket.name,
+      }
+      for bucket in (import '../grafana-mimir/config.json5').buckets
     ],
   },
 };
