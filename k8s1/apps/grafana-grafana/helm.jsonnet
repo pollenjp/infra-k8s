@@ -44,6 +44,7 @@ local helm_app = {
       ],
     },
     source: {
+      // https://github.com/grafana/helm-charts/tree/main/charts/grafana
       // https://artifacthub.io/packages/helm/grafana/grafana
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'grafana',
