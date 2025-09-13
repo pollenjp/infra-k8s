@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/pollenjp/infra-k8s/compare/v1.0.0...v1.1.0) (2025-09-13)
+
+
+### Features
+
+* **loki,prometheus:** add retention config ([49abc90](https://github.com/pollenjp/infra-k8s/commit/49abc90d2241923cf39e307918057c39adcdbc06))
+
 ## 1.0.0 (2025-09-07)
 
 
