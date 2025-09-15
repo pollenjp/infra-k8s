@@ -7,7 +7,7 @@ local minio_user0_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'config.json5').name + '-user0-secret',
+    name: name + '-user0-secret',
   },
   spec: {
     secretStoreRef: {
@@ -157,14 +157,14 @@ local tenant = {
     ],
     buckets: [
       {
-        name: 'loki-chunks',
-      },
+        name: bucket.minio_name,
+      }
+      for bucket in (import '../grafana-loki/config.json5').buckets
+    ] + [
       {
-        name: 'loki-ruler',
-      },
-      {
-        name: 'loki-admin',
-      },
+        name: bucket_name,
+      }
+      for bucket_name in std.uniq(std.sort(std.objectValues((import '../grafana-mimir/_config.jsonnet').buckets)))
     ],
   },
 };

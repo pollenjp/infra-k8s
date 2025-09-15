@@ -39,7 +39,7 @@ local env = (import '../env.jsonnet');
           path: "{{.path.path}}",
           directory: {
             recurse: true,
-            exclude: "{_*/*}",
+            exclude: "{_*/*,_*.jsonnet}",
           },
         },
         syncPolicy: {
