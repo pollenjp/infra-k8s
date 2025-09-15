@@ -123,6 +123,18 @@ local helm_app = {
               },
             },
           },
+          rollout_operator: {
+            // Failed sync attempt to 5.9.0-weekly.359: one or more objects failed to apply,
+            // reason:
+            //   Internal error occurred:
+            //   failed calling webhook "prepare-downscale-mimir.grafana.com":
+            //   failed to call webhook: Post "https://mimir-rollout-operator.mimir.svc:443/admission/prepare-downscale?timeout=10s":
+            //   tls: failed to verify certificate:
+            //   x509: certificate is valid for rollout-operator.mimir.svc, not mimir-rollout-operator.mimir.svc
+            webhooks: {
+              enabled: false,
+            },
+          },
           minio: {
             enabled: false,
           },
