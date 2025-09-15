@@ -123,6 +123,20 @@ local helm_app = {
                   version: 1,
                   editable: false,
                 },
+                {
+                  name: 'Mimir',
+                  type: 'prometheus',
+                  access: 'proxy',
+                  orgId: 1,
+                  url: (
+                    local n = (import '../grafana-mimir/_config.jsonnet').name + '-gateway';
+                    local ns = (import '../grafana-mimir/_config.jsonnet').namespace;
+                    'http://' + n + '.' + ns + '.svc.cluster.local/prometheus'
+                  ),
+                  isDefault: false,
+                  version: 1,
+                  editable: false,
+                },
               ],
             },
           },

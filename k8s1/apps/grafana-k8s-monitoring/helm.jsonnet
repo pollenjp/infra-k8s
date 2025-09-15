@@ -59,14 +59,40 @@ local helm_app = {
                 'http://' + n + '.' + ns + '.svc.cluster.local/loki/api/v1/push'
               ),
             },
+            {
+              name: 'mimir',
+              type: 'prometheus',
+              url: (
+                local n = (import '../grafana-mimir/_config.jsonnet').name + '-gateway';
+                local ns = (import '../grafana-mimir/_config.jsonnet').namespace;
+                'http://' + n + '.' + ns + '.svc.cluster.local/api/v1/push'
+              ),
+            },
           ],
+          // integrations: {
+          //   grafana: {
+          //     instances: [
+          //       {
+          //         name: 'grafana',
+          //         labelSelectors: {
+          //           // .Chart.Name
+          //           // https://github.com/grafana/helm-charts/blob/d73a322972ab1ef4220154199b1e28405b60d53a/charts/grafana/templates/_helpers.tpl#L5-L7
+          //           'app.kubernetes.io/name': 'grafana',
+          //         },
+          //         namespaces: [
+          //           (import '../grafana-grafana/config.json5').namespace,
+          //         ],
+          //       }
+          //     ]
+          //   }
+          // },
           clusterEvents: {
             enabled: true,
             collector: 'alloy-logs',
             namespaces: target_namespaces,
           },
           nodeLogs: {
-            enabled: false,
+            enabled: true,
           },
           podLogs: {
             enabled: true,
@@ -95,7 +121,7 @@ local helm_app = {
             enabled: false,
           },
           'alloy-metrics': {
-            enabled: false,
+            enabled: true,
           },
           'alloy-logs': {
             enabled: true,
@@ -105,8 +131,8 @@ local helm_app = {
                 enabled: true,
               },
               mounts: {
-                varlog: false,
-                dockercontainers: false,
+                varlog: true, // for nodeLogs
+                dockercontainers: true,
               },
             },
           },

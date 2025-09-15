@@ -135,6 +135,10 @@ local helm_app = {
               enabled: false,
             },
           },
+          gateway: {
+            // https://github.com/grafana/mimir/blob/b8771766403c9b7028055591c2ec18163a808e70/operations/helm/charts/mimir-distributed/templates/gateway/_helpers.tpl#L16-L22
+            enabledNonEnterprise: true,
+          },
           minio: {
             enabled: false,
           },
@@ -144,6 +148,7 @@ local helm_app = {
               common: {
                 storage: {
                   s3: {
+                    bucket_name: buckets.common_storage,
                     endpoint: 'minio.' + minio_tenant.namespace + '.svc.cluster.local:80',
                     insecure: true,
                     // https://github.com/grafana/loki/blob/cadc8240153597608b59821047345064981d1019/pkg/storage/bucket/s3/config.go#L77
