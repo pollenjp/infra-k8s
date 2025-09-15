@@ -18,21 +18,21 @@ local namespace = (import 'config.json5').namespace;
   }
 
   for target_and_policy in [
-    // {
-    //   target: (
-    //     local svc_info = (import '../grafana-loki/config.json5');
-    //     {
-    //       name: svc_info.service_account_name + '-rw-binding',
-    //       application: (
-    //         {
-    //           namespace: svc_info.namespace,
-    //           serviceaccount: svc_info.service_account_name,
-    //         }
-    //       )
-    //     }
-    //   ),
-    //   policy: 'readwrite',
-    // },
+    {
+      target: (
+        local svc_info = (import '../grafana-mimir/_config.jsonnet');
+        {
+          name: svc_info.service_account_name + '-rw-binding',
+          application: (
+            {
+              namespace: svc_info.namespace,
+              serviceaccount: svc_info.service_account_name,
+            }
+          )
+        }
+      ),
+      policy: 'readwrite', // FIXME: permissions are excessive and should be fixed
+    },
     {
       target: (
         local svc_info = (import '../grafana-loki/config.json5');
