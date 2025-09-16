@@ -48,7 +48,7 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/grafana/grafana
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'grafana',
-      targetRevision: '9.2.9',
+      targetRevision: '9.4.4',
       helm: {
         releaseName: name,
         valuesObject: {
