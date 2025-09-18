@@ -8,6 +8,7 @@ std.mergePatch(
     // Used in "../minio-tenant-1/manifests.jsonnet"
     "buckets": {
       // mimir target name : bucket name
+      common_storage: "mimir-chunks",
       blocks_storage: "mimir-tsdb",
       ruler_storage: "mimir-ruler",
       alertmanager_storage: "mimir-ruler",

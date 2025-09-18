@@ -67,6 +67,15 @@ local helm_app = {
             affinity: {
               nodeAffinity: node_affinity,
             },
+            remoteWrite: [
+              {
+                url: (
+                  local n = (import '../grafana-mimir/_config.jsonnet').name + '-gateway';
+                  local ns = (import '../grafana-mimir/_config.jsonnet').namespace;
+                  'http://' + n + '.' + ns + '.svc.cluster.local/api/v1/push'
+                ),
+              },
+            ],
           },
           // https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
           alertmanager: {
