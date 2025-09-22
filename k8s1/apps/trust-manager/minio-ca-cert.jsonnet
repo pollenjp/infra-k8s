@@ -1,5 +1,5 @@
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 {
   apiVersion: 'trust.cert-manager.io/v1alpha1',
@@ -30,7 +30,7 @@ local namespace = (import 'config.json5').namespace;
       },
       namespaceSelector: {
         matchLabels: {
-          'kubernetes.io/metadata.name': (import '../minio-operator/config.json5').namespace,
+          'kubernetes.io/metadata.name': (import '../minio-operator/_app_config.json').namespace,
         },
       },
     },

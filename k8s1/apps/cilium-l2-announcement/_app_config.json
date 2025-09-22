@@ -1,4 +1,4 @@
 {
   "name": "cilium-l2-announcement",
-  "namespace": "cilium-system",
+  "namespace": "cilium-system"
 }

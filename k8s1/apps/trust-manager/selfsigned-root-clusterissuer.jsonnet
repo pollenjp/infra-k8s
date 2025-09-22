@@ -1,6 +1,6 @@
 local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 
 // https://docs.min.io/community/minio-object-store/operations/network-encryption/cert-manager.html
 local selfsigned_root_clusterissuer = lib_hash2 { data: {

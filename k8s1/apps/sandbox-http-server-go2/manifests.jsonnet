@@ -1,6 +1,6 @@
 local lib_hash2 = import '../../../jsonnetlib/hash2.libsonnet';
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 
 local db_tier = "database";
 local db_postgres_db_name = 'testdb';

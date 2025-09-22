@@ -1,4 +1,4 @@
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 local svc_name = name + '-svc';
 local pod_name = name + '-pod';
 local container_name = name + '-container';
@@ -38,9 +38,9 @@ local deployment = {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'config.json5').name,
+    name: (import '_app_config.json').name,
     labels: {
-      'app.kubernetes.io/name': (import 'config.json5').name,
+      'app.kubernetes.io/name': (import '_app_config.json').name,
     },
   },
   spec: {

@@ -1,4 +1,4 @@
 {
   "name": "letsencrypt-stg-issuer",
-  "namespace": "letsencrypt-stg",
+  "namespace": "letsencrypt-stg"
 }

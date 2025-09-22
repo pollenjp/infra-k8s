@@ -17,7 +17,7 @@ local env = (import '../env.jsonnet');
           revision: "HEAD",
           files: [
             {
-              path: env.name + "/apps/*/config.json5",
+              path: env.name + "/apps/*/_app_config.json",
             },
           ],
         },
@@ -39,7 +39,7 @@ local env = (import '../env.jsonnet');
           path: "{{.path.path}}",
           directory: {
             recurse: true,
-            exclude: "{_*/*,_*.jsonnet}",
+            exclude: "{_*/*,_*.json,_*.jsonnet}",
           },
         },
         syncPolicy: {

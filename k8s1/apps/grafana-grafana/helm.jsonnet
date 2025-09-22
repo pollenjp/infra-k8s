@@ -1,7 +1,7 @@
 local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
 
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
@@ -100,8 +100,8 @@ local helm_app = {
                   //   httpHeaderValue1: '1',
                   // },
                   url: (
-                    local n = (import '../grafana-loki/config.json5').name + '-gateway';
-                    local ns = (import '../grafana-loki/config.json5').namespace;
+                    local n = (import '../grafana-loki/_app_config.json').name + '-gateway';
+                    local ns = (import '../grafana-loki/_app_config.json').namespace;
                     'http://' + n + '.' + ns + '.svc.cluster.local'
                   ),
                   basicAuth: false,
@@ -115,8 +115,8 @@ local helm_app = {
                   access: 'proxy',
                   orgId: 1,
                   url: (
-                    local n = (import '../grafana-prometheus/config.json5').name + '-server';
-                    local ns = (import '../grafana-prometheus/config.json5').namespace;
+                    local n = (import '../grafana-prometheus/_app_config.json').name + '-server';
+                    local ns = (import '../grafana-prometheus/_app_config.json').namespace;
                     'http://' + n + '.' + ns + '.svc.cluster.local'
                   ),
                   isDefault: false,

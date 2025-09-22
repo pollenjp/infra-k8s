@@ -1,13 +1,13 @@
 local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 
 local op_item = {
   apiVersion: 'onepassword.com/v1',
   kind: 'OnePasswordItem',
   metadata: {
     name: 'dummy',
-    namespace: (import '../cert-manager/config.json5').namespace, // NOTE: need to be the same
+    namespace: (import '../cert-manager/_app_config.json').namespace, // NOTE: need to be the same
   },
   spec: {
     // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=zorjm5yua3fhmgsk5morbt5edi&h=my.1password.com

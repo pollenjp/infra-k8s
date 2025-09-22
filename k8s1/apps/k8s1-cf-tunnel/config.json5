@@ -1,4 +1,0 @@
-{
-  name: "k8s1-cf-tunnel",
-  namespace: "k8s1-cf-tunnel",
-}

@@ -1,15 +1,15 @@
 # NOTE: same as the tunnel name configured in cloudflare
 local tunnel_name = 'k8s1-cf-tunnel';
 local cf_tunnel_token_name = 'cf-tunnel-token';
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 local env = (import '../../env.jsonnet');
-local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
+local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
-local configMap = {
+local configMap = lib_hash2 { data: {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: 'dummy',
+    name: name + '-config',
     labels: {
       'app.kubernetes.io/name': 'k8s1-cf-tunnel',
     },
@@ -29,35 +29,35 @@ local configMap = {
           {
             hostname: 'grafana.pollenjp.com',
             service: (
-              local n = (import '../grafana-grafana/config.json5').name;
-              local ns = (import '../grafana-grafana/config.json5').namespace;
+              local n = (import '../grafana-grafana/_app_config.json').name;
+              local ns = (import '../grafana-grafana/_app_config.json').namespace;
               'http://' + n + '.' + ns + '.svc.cluster.local'
             ),
           },
           {
             hostname: 'minio-console.pollenjp.com',
             service: (
-              local n = (import '../grafana-loki/config.json5').name + '-minio-console';
-              local ns = (import '../grafana-loki/config.json5').namespace;
+              local n = (import '../grafana-loki/_app_config.json').name + '-minio-console';
+              local ns = (import '../grafana-loki/_app_config.json').namespace;
               'http://' + n + '.' + ns + '.svc.cluster.local:9001'
             ),
           },
           {
             hostname: 'minio-tenant-1-console.pollenjp.com',
             service: (
-              local tenant_name = (import '../minio-tenant-1/config.json5').name;
+              local tenant_name = (import '../minio-tenant-1/_app_config.json').name;
               local n = tenant_name + '-console';
-              local ns = (import '../minio-tenant-1/config.json5').namespace;
+              local ns = (import '../minio-tenant-1/_app_config.json').namespace;
               'http://' + n + '.' + ns + '.svc.cluster.local:9090'
             ),
           },
           {
             hostname: 'longhorn.pollenjp.com',
-            service: 'http://longhorn-frontend.' + (import '../longhorn/config.json5').namespace + '.svc.cluster.local',
+            service: 'http://longhorn-frontend.' + (import '../longhorn/_app_config.json').namespace + '.svc.cluster.local',
           },
           (
-            local n = 'cilium-ingress-' + (import '../sandbox-http-server-go1/config.json5').name;
-            local ns = (import '../sandbox-http-server-go1/config.json5').namespace;
+            local n = 'cilium-ingress-' + (import '../sandbox-http-server-go1/_app_config.json').name;
+            local ns = (import '../sandbox-http-server-go1/_app_config.json').namespace;
             {
               hostname: 'sandbox-http-server-go1.pollenjp.com',
               service: 'http://' + n + '.' + ns + '.svc.cluster.local',
@@ -65,24 +65,24 @@ local configMap = {
           ),
           {
             hostname: 'sandbox-http-server-go2.pollenjp.com',
-            service: 'http://sandbox-http-server-go2-svc.' + (import '../sandbox-http-server-go2/config.json5').namespace + '.svc.cluster.local:8080',
+            service: 'http://sandbox-http-server-go2-svc.' + (import '../sandbox-http-server-go2/_app_config.json').namespace + '.svc.cluster.local:8080',
           },
           {
             hostname: 'sandbox-nginx.pollenjp.com',
             service: (
               // svc
-              local n = (import '../sandbox-nginx/config.json5').name;
-              local ns = (import '../sandbox-nginx/config.json5').namespace;
+              local n = (import '../sandbox-nginx/_app_config.json').name;
+              local ns = (import '../sandbox-nginx/_app_config.json').namespace;
               'http://' + n + '.' + ns + '.svc.cluster.local:8080'
             ),
           },
           (
-            local public_domain = (import '../sandbox-nginx/config.json5').public_domain;
+            local public_domain = (import '../sandbox-nginx/_app_config.json').public_domain;
             {
               hostname: public_domain,
               service: (
-                local n = (import '../sandbox-nginx/config.json5').name;
-                local ns = (import '../sandbox-nginx/config.json5').namespace;
+                local n = (import '../sandbox-nginx/_app_config.json').name;
+                local ns = (import '../sandbox-nginx/_app_config.json').namespace;
                 'http://' + n + '.' + ns + '.svc.cluster.local:8080'
               )
             }
@@ -94,8 +94,35 @@ local configMap = {
       },
     ),
   },
-};
-local config_map_name = name + '-' + lib_hash { data: configMap }.output;
+} }.output;
+
+local ex_secret_credential_key_name = 'credentials';
+local ex_secret = lib_hash2 { data: {
+  apiVersion: 'external-secrets.io/v1',
+  kind: 'ExternalSecret',
+  metadata: {
+    name: (import '_app_config.json').name + '-ex-secret',
+  },
+  spec: {
+    secretStoreRef: {
+      kind: 'ClusterSecretStore',
+      name: (import '../external-secrets/secret_store.jsonnet').metadata.name,
+    },
+    target: {
+      creationPolicy: 'Owner',
+    },
+    data: [
+      {
+        secretKey: ex_secret_credential_key_name,
+        remoteRef: {
+          // k8s1-cf-tunnel
+          // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=zvyy23tjbsvgg2jrfpdztsx3zi&h=my.1password.com
+          key: 'zvyy23tjbsvgg2jrfpdztsx3zi/yd5tpo6nyf7u76b4tkfwxjpmhi/azt3qsnm3yadx7pbhkhqzx7tfa',
+        },
+      },
+    ]
+  },
+} }.output;
 
 local deployment = {
   apiVersion: 'apps/v1',
@@ -104,12 +131,6 @@ local deployment = {
     name: 'cloudflared',
     labels: {
       'app.kubernetes.io/name': 'k8s1-cf-tunnel',
-    },
-    annotations: {
-      // k8s1-cf-tunnel
-      // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=zvyy23tjbsvgg2jrfpdztsx3zi&h=my.1password.com
-      'operator.1password.io/item-path': 'vaults/tsa4qdut6lvgsrl5xvsvdnmgwe/items/zvyy23tjbsvgg2jrfpdztsx3zi',
-      'operator.1password.io/item-name': cf_tunnel_token_name,
     },
   },
   spec: {
@@ -202,10 +223,10 @@ local deployment = {
           {
             name: 'creds',
             secret: {
-              secretName: cf_tunnel_token_name,
+              secretName: ex_secret.metadata.name,
               items: [
                 {
-                  key: 'password',
+                  key: ex_secret_credential_key_name,
                   path: 'credentials.json',
                 },
               ],
@@ -214,7 +235,7 @@ local deployment = {
           {
             name: 'config',
             configMap: {
-              name: config_map_name,
+              name: configMap.metadata.name,
               items: [
                 {
                   key: 'config.yaml',
@@ -230,6 +251,7 @@ local deployment = {
 };
 
 [
-  std.mergePatch(configMap, { metadata: { name: config_map_name } }),
+  configMap,
+  ex_secret,
   deployment,
 ]

@@ -1,4 +1,4 @@
-local argo_app_config = (import 'config.json5');
+local argo_app_config = (import '_app_config.json');
 
 std.mergePatch(
   argo_app_config,

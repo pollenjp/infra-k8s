@@ -1,6 +1,6 @@
 local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 
 local op_item = {
   apiVersion: 'onepassword.com/v1',

@@ -1,6 +1,6 @@
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
-local storage_class_name = (import 'config.json5').storage_class_name;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
+local storage_class_name = (import '_app_config.json').storage_class_name;
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';

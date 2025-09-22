@@ -1,6 +1,6 @@
 local lib_hash2 = import '../../../jsonnetlib/hash2.libsonnet';
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 local pod_name = name + '-pod';
 local container_name = name + '-container';
 

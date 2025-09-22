@@ -1,7 +1,7 @@
 local env = (import '../../env.jsonnet');
 local lib_hash = (import '../../../jsonnetlib/hash.libsonnet');
 
-local name = (import 'config.json5').name;
+local name = (import '_app_config.json').name;
 
 local cilium_balancer_ip_pool = {
   apiVersion: "cilium.io/v2alpha1",

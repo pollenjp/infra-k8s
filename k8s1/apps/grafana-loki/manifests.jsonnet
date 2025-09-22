@@ -1,12 +1,12 @@
 local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
-local service_account_name = (import 'config.json5').service_account_name;
-local buckets = (import 'config.json5').buckets;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
+local service_account_name = (import '_app_config.json').service_account_name;
+local buckets = (import '_app_config.json').buckets;
 
-local minio_tenant = (import '../minio-tenant-1/config.json5');
-local minio_operator = (import '../minio-operator/config.json5');
+local minio_tenant = (import '../minio-tenant-1/_app_config.json');
+local minio_operator = (import '../minio-operator/_app_config.json');
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
@@ -23,7 +23,7 @@ local minio_ex_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'config.json5').name + '-ex-secret',
+    name: (import '_app_config.json').name + '-ex-secret',
   },
   spec: {
     secretStoreRef: {

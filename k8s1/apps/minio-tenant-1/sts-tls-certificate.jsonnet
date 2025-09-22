@@ -1,7 +1,7 @@
 local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 // https://docs.min.io/community/minio-object-store/operations/cert-manager/cert-manager-operator.html
 //

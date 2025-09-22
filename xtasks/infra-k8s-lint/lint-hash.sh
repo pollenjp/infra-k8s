@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+#MISE description = "Lint the yaml files"
 
 set -euo pipefail
 

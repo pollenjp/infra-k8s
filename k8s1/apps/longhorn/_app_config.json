@@ -1,5 +1,5 @@
 {
   "name": "longhorn",
   "namespace": "longhorn-system",
-  "storage_class_name": "longhorn-local",
+  "storage_class_name": "longhorn-local"
 }

@@ -1,5 +1,5 @@
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 [
   {
@@ -35,7 +35,7 @@ local namespace = (import 'config.json5').namespace;
     },
     {
       target: (
-        local svc_info = (import '../grafana-loki/config.json5');
+        local svc_info = (import '../grafana-loki/_app_config.json');
         {
           name: svc_info.service_account_name + '-test-rw-binding',
           application: (

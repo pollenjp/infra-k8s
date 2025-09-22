@@ -1,4 +1,4 @@
-local namespace = (import 'config.json5').namespace;
+local namespace = (import '_app_config.json').namespace;
 
 // https://external-secrets.io/latest/provider/1password-sdk/
 local op_secret_store = {

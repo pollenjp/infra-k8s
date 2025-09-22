@@ -1,16 +1,24 @@
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
 
-local target_namespaces = [
-  'argocd',
-  (import '../sandbox-http-server-go1/config.json5').namespace,
-  (import '../sandbox-http-server-go2/config.json5').namespace,
-  (import '../echo-slack-bot-rs/config.json5').namespace,
-  (import '../sandbox-nginx/config.json5').namespace,
-];
+local target_namespaces = (
+  local including = [
+    'argocd',
+  ] + (import 'namespaces.autogen.json').namespaces;
+  local excluding = [
+    (import '../grafana-loki/_app_config.json').namespace,
+    (import '../grafana-mimir/_app_config.json').namespace,
+    (import '../minio-tenant-1/_app_config.json').namespace,
+    (import '../cilium-l2-announcement/_app_config.json').namespace,
+  ];
+  std.filter(
+    function(namespace) !std.contains(excluding, namespace),
+    including,
+  )
+);
 
 local helm_app = {
   apiVersion: 'argoproj.io/v1alpha1',
@@ -54,8 +62,8 @@ local helm_app = {
               name: 'loki',
               type: 'loki',
               url: (
-                local n = (import '../grafana-loki/config.json5').name + '-gateway';
-                local ns = (import '../grafana-loki/config.json5').namespace;
+                local n = (import '../grafana-loki/_app_config.json').name + '-gateway';
+                local ns = (import '../grafana-loki/_app_config.json').namespace;
                 'http://' + n + '.' + ns + '.svc.cluster.local/loki/api/v1/push'
               ),
             },
@@ -80,7 +88,7 @@ local helm_app = {
           //           'app.kubernetes.io/name': 'grafana',
           //         },
           //         namespaces: [
-          //           (import '../grafana-grafana/config.json5').namespace,
+          //           (import '../grafana-grafana/_app_config.json').namespace,
           //         ],
           //       }
           //     ]

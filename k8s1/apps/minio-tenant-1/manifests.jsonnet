@@ -1,7 +1,7 @@
 local lib_hash2 = (import '../../../jsonnetlib/hash2.libsonnet');
 
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
 
 local minio_user0_secret = lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
@@ -159,7 +159,7 @@ local tenant = {
       {
         name: bucket.minio_name,
       }
-      for bucket in (import '../grafana-loki/config.json5').buckets
+      for bucket in (import '../grafana-loki/_app_config.json').buckets
     ] + [
       {
         name: bucket_name,

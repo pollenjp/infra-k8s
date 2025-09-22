@@ -1,6 +1,6 @@
-local name = (import 'config.json5').name;
-local namespace = (import 'config.json5').namespace;
-local public_domain = (import 'config.json5').public_domain;
+local name = (import '_app_config.json').name;
+local namespace = (import '_app_config.json').namespace;
+local public_domain = (import '_app_config.json').public_domain;
 
 local pod_name = name + '-pod';
 local container_name = name + '-container';
@@ -8,7 +8,7 @@ local deployment_name = name + '-deployment';
 local service_name = name;
 local ingress_name = name;
 
-local issuer_name = (import '../letsencrypt-stg-issuer/config.json5').name;
+local issuer_name = (import '../letsencrypt-stg-issuer/_app_config.json').name;
 
 // local op_item_spec = {
 //   // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=rvybz6bamkrlwpiwqrqfm74w4e&h=my.1password.com

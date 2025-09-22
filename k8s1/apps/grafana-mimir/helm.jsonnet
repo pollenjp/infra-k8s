@@ -8,8 +8,8 @@ local buckets = config.buckets;
 local app_name = name + '-helm';
 local app_namespace = 'argocd';
 
-local minio_tenant = (import '../minio-tenant-1/config.json5');
-local minio_operator = (import '../minio-operator/config.json5');
+local minio_tenant = (import '../minio-tenant-1/_app_config.json');
+local minio_operator = (import '../minio-operator/_app_config.json');
 
 local internal_ca_configmap = (import '../trust-manager/trust-bundle.jsonnet');
 local internal_ca_bundle_volume_name = 'internal-trust-bundle';

@@ -1,0 +1,21 @@
+{
+  "name": "loki",
+  "namespace": "loki",
+  "_comment1": "Used in \"../minio-tenant-1/policy-binding.jsonnet\"",
+  "service_account_name": "loki-sa",
+  "_comment2": "Used in \"../minio-tenant-1/manifests.jsonnet\"",
+  "buckets": [
+    {
+      "loki_name": "chunks",
+      "minio_name": "loki-chunks"
+    },
+    {
+      "loki_name": "ruler",
+      "minio_name": "loki-ruler"
+    },
+    {
+      "loki_name": "admin",
+      "minio_name": "loki-admin"
+    }
+  ]
+}
