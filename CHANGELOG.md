@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0](https://github.com/pollenjp/infra-k8s/compare/v1.0.0...v1.1.0) (2025-09-22)
+
+
+### Features
+
+* **grafana-mimir:** init ([d8b80f6](https://github.com/pollenjp/infra-k8s/commit/d8b80f61339893f634332da5258fd5545a8e3b6e))
+* **loki,prometheus:** add retention config ([49abc90](https://github.com/pollenjp/infra-k8s/commit/49abc90d2241923cf39e307918057c39adcdbc06))
+* **mimir:** fix kafka retention and mimir max_global_series_per_user ([750ccb0](https://github.com/pollenjp/infra-k8s/commit/750ccb04e0528f5c48b4f933aaf76bc7cdc47a9a))
+* **mimir:** set mimir to prometheus target ([8520cef](https://github.com/pollenjp/infra-k8s/commit/8520cef88068aa95b04296d44ab0bb57fcbad04e))
+
 ## 1.0.0 (2025-09-07)
 
 
