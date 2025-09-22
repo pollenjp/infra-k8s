@@ -120,8 +120,7 @@ local helm_app = {
           },
           kafka: {
             persistence: {
-              // FIXME: retention
-              size: '10Gi',
+              size: '5Gi',
             },
             affinity: {
               nodeAffinity: node_affinity,
@@ -132,6 +131,12 @@ local helm_app = {
                 memory: '128Mi',
               },
             },
+            extraEnv: [
+              {
+                name: 'KAFKA_LOG_RETENTION_BYTES_CONFIG',
+                value: '4294967296', // 4GB
+              }
+            ]
           },
           rollout_operator: {
             // Failed sync attempt to 5.9.0-weekly.359: one or more objects failed to apply,
@@ -172,6 +177,9 @@ local helm_app = {
                     bucket_lookup_type: 'path',
                   },
                 },
+              },
+              limits: {
+                max_global_series_per_user: 2000000,
               },
               alertmanager_storage: {
                 backend: 's3',
