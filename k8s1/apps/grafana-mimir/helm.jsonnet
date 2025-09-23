@@ -119,6 +119,7 @@ local helm_app = {
             },
           },
           kafka: {
+            // enabled: false,
             persistence: {
               size: '5Gi',
             },
@@ -133,10 +134,29 @@ local helm_app = {
             },
             extraEnv: [
               {
-                name: 'KAFKA_LOG_RETENTION_BYTES_CONFIG',
-                value: '4294967296', // 4GB
-              }
-            ]
+                name: 'KAFKA_LOG_RETENTION_BYTES',
+                value: '268435456', // 256 MiB
+                // value: '1073741824', // 1GiB
+                // value: '4294967296', // 4GiB
+              },
+              {
+                name: 'KAFKA_LOG_SEGMENT_BYTES',
+                value: '134217728', // 128 MiB
+              },
+              {
+                // log.cleaner.delete.retention.ms
+                name: 'KAFKA_LOG_CLEANER_DELETE_RETENTION_MS',
+                value: '300000', // 5 minutes
+              },
+              {
+                name: 'KAFKA_LOG_CLEANUP_POLICY',
+                value: 'delete', // specify clearly
+              },
+              {
+                name: 'KAFKA_LOG_RETENTION_MINUTES',
+                value: '60',
+              },
+            ],
           },
           rollout_operator: {
             // Failed sync attempt to 5.9.0-weekly.359: one or more objects failed to apply,
