@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/pollenjp/infra-k8s/compare/v1.1.0...v1.2.0) (2025-09-24)
+
+
+### Features
+
+* **argocd:** restructuring to '_app_config.json' ([c0f2a7d](https://github.com/pollenjp/infra-k8s/commit/c0f2a7dd2cf472d4d02f336c145fb62df18d8870))
+* **mimir:** fix kafka's retention configuration ([4cd4e1d](https://github.com/pollenjp/infra-k8s/commit/4cd4e1d4424c6092b21cdb78e0936c90e8915d6c))
+
 ## [1.1.0](https://github.com/pollenjp/infra-k8s/compare/v1.0.0...v1.1.0) (2025-09-22)
 
 
