@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/pollenjp/infra-k8s/compare/v1.2.0...v1.3.0) (2025-09-28)
+
+
+### Features
+
+* **ci:** fix release-please-action's version with hash ([17b1e6f](https://github.com/pollenjp/infra-k8s/commit/17b1e6f4cfaeaafcb8946474f3f0d494105ad9ae))
+* **minio-tenant-1:** add pool 2 ([9ef5b71](https://github.com/pollenjp/infra-k8s/commit/9ef5b71763a6e2341b23d87b00bf3393d6e8b8f5))
+
 ## [1.2.0](https://github.com/pollenjp/infra-k8s/compare/v1.1.0...v1.2.0) (2025-09-24)
 
 
