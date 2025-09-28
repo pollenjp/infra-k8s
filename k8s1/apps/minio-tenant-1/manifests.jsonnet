@@ -107,9 +107,9 @@ local tenant = {
     pools: [
       {
         // https://docs.min.io/community/minio-object-store/reference/operator-crd.html#pool
-        name: name + 'pool-1',
-        servers: 2,
-        volumesPerServer: 2,
+        name: name + 'pool-' + i,
+        servers: 2, // minimum is 2
+        volumesPerServer: 2, // minimum is 2
         volumeClaimTemplate: {
           // https://github.com/minio/operator/blob/master/docs/expansion.md#getting-started
           // https://github.com/minio/operator/blob/e054c34ee36535b1323337816450dd7b3fcac482/docs/expansion.md#getting-started
@@ -131,7 +131,31 @@ local tenant = {
         affinity: {
           nodeAffinity: node_affinity,
         },
-      }
+      } for i in std.range(1, 1) // NOTE: the two limits, inclusively
+    ] + [
+      {
+        name: name + 'pool-' + i,
+        servers: 2, // minimum is 2
+        volumesPerServer: 3, // minimum is 2
+        volumeClaimTemplate: {
+          metadata: {
+            name: 'data-' + i,
+          },
+          spec: {
+            accessModes: [
+              'ReadWriteOnce',
+            ],
+            resources: {
+              requests: {
+                storage: '10Gi',
+              },
+            },
+          },
+        },
+        affinity: {
+          nodeAffinity: node_affinity,
+        },
+      } for i in std.range(2, 2) // NOTE: the two limits, inclusively
     ],
     // cpuv1
     // https://github.com/minio/minio/blob/b4b3d208dd7dad1ac67ce662412b89b0d70d68b6/helm/minio/values.yaml#L13-L29
