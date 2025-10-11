@@ -7,8 +7,9 @@ local app_namespace = 'argocd';
 local target_namespaces = (
   local including = [
     'argocd',
-  ] + (import 'namespaces.autogen.json').namespaces;
+  ] + std.objectFields((import '_namespaces.autogen.json').namespaces);
   local excluding = [
+    namespace, // self
     (import '../grafana-loki/_app_config.json').namespace,
     (import '../grafana-mimir/_app_config.json').namespace,
     (import '../minio-tenant-1/_app_config.json').namespace,

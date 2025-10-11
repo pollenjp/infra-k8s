@@ -1,0 +1,23 @@
+{
+  "namespaces": {
+    "grafana": null,
+    "longhorn-system": null,
+    "echo-slack-bot-rs": null,
+    "sandbox-http-server-go2": null,
+    "minio-tenant-1": null,
+    "k8s-monitoring": null,
+    "sandbox-nginx": null,
+    "external-secrets": null,
+    "cert-manager": null,
+    "k8s1-cf-tunnel": null,
+    "cilium-system": null,
+    "sandbox-http-server-go1": null,
+    "onepassword-items": null,
+    "loki": null,
+    "minio-operator": null,
+    "prometheus": null,
+    "authentik": null,
+    "mimir": null,
+    "letsencrypt-stg": null
+  }
+}

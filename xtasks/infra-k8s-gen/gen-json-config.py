@@ -19,9 +19,9 @@ class ConfigFile(BaseModel):
 
 def main():
     base_dir = Path("./k8s1/apps")
-    ns_config_file = Path("./k8s1/apps/grafana-k8s-monitoring/namespaces.autogen.json")
+    ns_config_file = Path("./k8s1/apps/grafana-k8s-monitoring/_namespaces.autogen.json")
 
-    config_files = [f for f in base_dir.glob("**/app_config.json")]
+    config_files = [f for f in base_dir.glob("**/_app_config.json")]
     configs = [ConfigFile.model_validate_json(f.read_text()) for f in config_files]
     # import pprint
 
@@ -30,7 +30,7 @@ def main():
     with open(ns_config_file, "wt", encoding="utf-8") as f:
         json.dump(
             {
-                "namespaces": [c.namespace for c in configs],
+                "namespaces": {c.namespace: None for c in configs},
             },
             f,
             indent=2,
