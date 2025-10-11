@@ -103,9 +103,29 @@ local helm_app = {
                 replicationPasswordKey: config.secrets.psql_replication.key_name,
               },
             },
+            primary: {
+              affinity: {
+                nodeAffinity: node_affinity,
+              },
+            },
+            readReplicas: {
+              affinity: {
+                nodeAffinity: node_affinity,
+              },
+            },
           },
           redis: {
             enabled: true,
+            master: {
+              affinity: {
+                nodeAffinity: node_affinity,
+              },
+            },
+            replica: {
+              affinity: {
+                nodeAffinity: node_affinity,
+              },
+            },
           },
         },
       },
