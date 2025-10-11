@@ -52,6 +52,15 @@ local configMap = lib_hash2 { data: {
             ),
           },
           {
+            hostname: 'authentik.pollenjp.com',
+            service: (
+              local svc_name = (import '../authentik/_config.jsonnet').export_svc_name;
+              local port_num = (import '../authentik/_config.jsonnet').export_svc_port;
+              local ns = (import '../authentik/_config.jsonnet').namespace;
+              'http://' + svc_name + '.' + ns + '.svc.cluster.local:' + port_num
+            ),
+          },
+          {
             hostname: 'longhorn.pollenjp.com',
             service: 'http://longhorn-frontend.' + (import '../longhorn/_app_config.json').namespace + '.svc.cluster.local',
           },
