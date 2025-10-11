@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/pollenjp/infra-k8s/compare/v1.3.0...v1.4.0) (2025-10-11)
+
+
+### Features
+
+* **authentik:** init ([2d088ae](https://github.com/pollenjp/infra-k8s/commit/2d088ae364c65a60700c2d2ebdfab3fb5d4eb06b))
+* **authentik:** modify nodeAffinity ([4c8f743](https://github.com/pollenjp/infra-k8s/commit/4c8f743ce55245a4bc0ebe8b445ec0862c0c74ee))
+
+
+### Bug Fixes
+
+* **k8s-monitoring:** namespace script ([6bb0b76](https://github.com/pollenjp/infra-k8s/commit/6bb0b76c018da2637d12002ecfd01176a3e2120c))
+
 ## [1.3.0](https://github.com/pollenjp/infra-k8s/compare/v1.2.0...v1.3.0) (2025-09-28)
 
 
