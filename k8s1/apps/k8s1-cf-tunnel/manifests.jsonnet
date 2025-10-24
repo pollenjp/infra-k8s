@@ -27,6 +27,15 @@ local configMap = lib_hash2 { data: {
             service: 'http://argo-argocd-server.argocd.svc.cluster.local',
           },
           {
+            hostname: 'kerberos.pollenjp.com',
+            service: (
+              local n = (import '../kerberos/_config.jsonnet').export_svc_name;
+              local ns = (import '../kerberos/_config.jsonnet').namespace;
+              local port_num = (import '../kerberos/_config.jsonnet').export_svc_port;
+              'http://' + n + '.' + ns + '.svc.cluster.local:' + port_num
+            ),
+          },
+          {
             hostname: 'grafana.pollenjp.com',
             service: (
               local n = (import '../grafana-grafana/_app_config.json').name;
