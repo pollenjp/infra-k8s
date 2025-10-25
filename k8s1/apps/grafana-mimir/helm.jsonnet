@@ -92,6 +92,12 @@ local helm_app = {
                 memory: '128Mi',
               },
             },
+            // https://github.com/grafana/mimir/blob/b8771766403c9b7028055591c2ec18163a808e70/operations/helm/charts/mimir-distributed/templates/ingester/ingester-statefulset.yaml#L34-L38
+            persistentVolume: {
+              enableRetentionPolicy: true,
+              whenDeleted: 'Delete',
+              whenScaled: 'Delete',
+            },
           },
           store_gateway: {
             zoneAwareReplication: {
