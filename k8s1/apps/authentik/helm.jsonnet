@@ -70,7 +70,7 @@ local helm_app = {
                 valueFrom: {
                   secretKeyRef: {
                     name: ex_secret.metadata.name,
-                    key: config.secrets.authentik_secret_key.key_name,
+                    key: config.secret.authentik_secret_key.key_name,
                   }
                 }
               },
@@ -80,7 +80,7 @@ local helm_app = {
                 valueFrom: {
                   secretKeyRef: {
                     name: ex_secret.metadata.name,
-                    key: config.secrets.psql_user.key_name,
+                    key: config.secret.psql_user.key_name,
                   }
                 }
               },
@@ -98,9 +98,9 @@ local helm_app = {
               // https://github.com/bitnami/charts/blob/bf43666619d60297e22479b22966a3cd9546d8f9/bitnami/postgresql/values.yaml#L170-L178
               existingSecret: ex_secret.metadata.name,
               secretKeys: {
-                adminPasswordKey: config.secrets.psql_admin.key_name,
-                userPasswordKey: config.secrets.psql_user.key_name,
-                replicationPasswordKey: config.secrets.psql_replication.key_name,
+                adminPasswordKey: config.secret.psql_admin.key_name,
+                userPasswordKey: config.secret.psql_user.key_name,
+                replicationPasswordKey: config.secret.psql_replication.key_name,
               },
             },
             primary: {

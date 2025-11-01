@@ -7,7 +7,11 @@ std.mergePatch(
     export_svc_name: 'authentik-server', // expose from cloudflare tunnel
     // hard code: configured in helm chart
     export_svc_port: 80, // expose from cloudflare tunnel
-    secrets: { // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=tv7ap6k7v5p4yzm4dtk2kqloxu&h=my.1password.com
+    secret: { // https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=tsa4qdut6lvgsrl5xvsvdnmgwe&i=tv7ap6k7v5p4yzm4dtk2kqloxu&h=my.1password.com
+      // <map_key (use in jsonnet)>: {
+      //   key_name: "key name in secret data",
+      //   onepassword_key: "onepassword key",
+      // }
       authentik_secret_key: {
         // https://github.com/goauthentik/helm/blob/0d7a6736ee1eb9fa6717a8fc6826985c45ed2e9c/charts/authentik/values.yaml#L157
         // > -- Secret key used for cookie singing and unique user IDs,

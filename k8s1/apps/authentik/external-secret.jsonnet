@@ -6,7 +6,7 @@ lib_hash2 { data: {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import '_app_config.json').name + '-ex-secret',
+    name: config.name + '-ex-secret',
   },
   spec: {
     secretStoreRef: {
@@ -22,7 +22,7 @@ lib_hash2 { data: {
         remoteRef: {
           key: secret.onepassword_key,
         },
-      } for secret in std.objectValues(config.secrets)
+      } for secret in std.objectValues(config.secret)
     ]
   },
 } }.output

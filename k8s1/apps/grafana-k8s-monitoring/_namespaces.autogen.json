@@ -6,6 +6,7 @@
     "sandbox-http-server-go2": null,
     "minio-tenant-1": null,
     "k8s-monitoring": null,
+    "kerberos": null,
     "sandbox-nginx": null,
     "external-secrets": null,
     "cert-manager": null,
