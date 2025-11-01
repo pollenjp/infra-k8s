@@ -16,7 +16,7 @@ local op_secret_store = {
         auth: {
           serviceAccountSecretRef: {
             # This 'Secret' resource is created by 'cdk-ansible'
-            # https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=olaezna7txg3auf65jivo74zbe&i=w7qev4wwbjzpn2a5kfkq7nla3a&h=my.1password.com
+            # https://start.1password.com/open/i?a=UWWKBI7TBZCR7JIGGPATTRJZPQ&v=olaezna7txg3auf65jivo74zbe&i=qjwefxxj45dnkwplh7t7qmwale&h=my.1password.com
             namespace: 'onepassword',
             name: 'k8s1-service-account-auth-token',
             key: 'token',
