@@ -33,7 +33,7 @@ local helm_app = {
       // https://artifacthub.io/packages/helm/cert-manager/cert-manager
       repoURL: 'https://charts.jetstack.io',
       chart: 'cert-manager',
-      targetRevision: '1.17.2',
+      targetRevision: 'v1.19.1',
       helm: {
         releaseName: name,
         valuesObject: {
