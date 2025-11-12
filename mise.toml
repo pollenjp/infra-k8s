@@ -4,6 +4,7 @@ min_version = "2025.8.4"
 includes = ["xtasks"]
 
 [tasks]
+fmt = { depends = ["infra-k8s-fmt:*"] }
 lint = { depends = ["infra-k8s-lint:*"] }
 gen = { depends = ["infra-k8s-gen:*"] }
 

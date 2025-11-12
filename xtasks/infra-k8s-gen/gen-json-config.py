@@ -3,7 +3,7 @@
 # dependencies = ["pydantic==2.11"]
 # ///
 #
-#!MISE description="Generate json config from directory architecture"
+# [MISE] description="Generate json config from directory architecture"
 #
 
 import json

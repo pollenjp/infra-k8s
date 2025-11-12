@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+shell_filter_script=$(
+  cat <<'__EOF__'
+set -euo pipefail
+fpath="$1"
+awk "NR<=1" "$fpath" | grep -q -E "#!/.*(sh|bash)$" && echo "$fpath" || true
+__EOF__
+)
+
+# find files that start with shebang and run a command to those files
+#
+# * git ls-files ... : target files under git management
+# * find ... -type f : exclude git-submodule
+# * grep -vE ...     : exclude files that are clearly not shell scripts
+#                      and allow '.sh', '.bash', ..., '(empty)' extension files
+# * bash -c ...      : check if the file has a shebang for shell script (e.g. '#!/usr/bin/env bash')
+#
+git ls-files --exclude-standard -co \
+  | xargs -I{} find {} -maxdepth 0 -type f \
+  | grep -vE '.*\.(rs|yaml|yml|toml|json|md|ini)$' \
+  | xargs -P0 -I{} bash -c "${shell_filter_script}" _ {} \
+  | xargs -P0 -I{} -t shellcheck "{}"
