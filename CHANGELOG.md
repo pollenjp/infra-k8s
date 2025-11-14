@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.0](https://github.com/pollenjp/infra-k8s/compare/v1.4.0...v1.5.0) (2025-11-14)
+
+
+### Features
+
+* **grafana:** convert to external-secret from onepassworditem ([2c6393b](https://github.com/pollenjp/infra-k8s/commit/2c6393b5bc5a350d69174e0d5d028dc27b07b82d))
+* **kerberos:** init ([e4a45d6](https://github.com/pollenjp/infra-k8s/commit/e4a45d6935d1bf5059f7071a2306702d924b6d4d))
+* **mimir:** enable RetentionPolicy and set 'Delete' ([251c9e9](https://github.com/pollenjp/infra-k8s/commit/251c9e9b3ad7c534e14200e7e566cd60a5bc4886))
+
 ## [1.4.0](https://github.com/pollenjp/infra-k8s/compare/v1.3.0...v1.4.0) (2025-10-11)
 
 
