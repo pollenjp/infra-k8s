@@ -40,6 +40,22 @@ local helm_app = {
       helm: {
         releaseName: name,
         valuesObject: {
+          image: {
+            registry: 'mirror.gcr.io',
+          },
+          testFramework: {
+            image: {
+              registry: 'mirror.gcr.io',
+            },
+          },
+          downloadDashboardsImage: {
+            registry: 'mirror.gcr.io',
+          },
+          initChownData: {
+            image: {
+              registry: 'mirror.gcr.io',
+            },
+          },
           persistence: {
             type: 'pvc',
             enabled: true,

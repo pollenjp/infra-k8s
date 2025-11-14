@@ -30,7 +30,9 @@ def main():
     with open(ns_config_file, "wt", encoding="utf-8") as f:
         json.dump(
             {
-                "namespaces": {c.namespace: None for c in configs},
+                "namespaces": {
+                    ns: None for ns in sorted(set(c.namespace for c in configs))
+                },
             },
             f,
             indent=2,

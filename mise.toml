@@ -1,5 +1,10 @@
 min_version = "2025.8.4"
 
+[tools]
+"aqua:google/go-jsonnet" = "0.21.0"
+"aqua:mvdan/sh" = "3.12.0"
+uv = "0.9.9"
+
 [task_config]
 includes = ["xtasks"]
 
@@ -7,13 +12,3 @@ includes = ["xtasks"]
 fmt = { depends = ["infra-k8s-fmt:*"] }
 lint = { depends = ["infra-k8s-lint:*"] }
 gen = { depends = ["infra-k8s-gen:*"] }
-
-# [tasks.gen]
-# description = "Convert jsonnet to yaml (use the yaml information by Ansible)"
-# sources = ["**/*.jsonnet", "**/*.json5", "**/*.json"]
-# outputs = { auto = true }
-# run = './gen-yaml.sh'
-
-[tools]
-"aqua:google/go-jsonnet" = "latest"
-uv = "0.8.14"
