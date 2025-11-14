@@ -178,7 +178,7 @@ local db_deployment = {
         containers: [
           {
             name: db_container_name,
-            image: "mirror.gcr.io/library/postgres:17.5",
+            image: "mirror.gcr.io/library/postgres:17.7",
             imagePullPolicy: "Always",
             // resources: {
             //   limits: {
