@@ -33,7 +33,7 @@ local helm_app = {
       // https://github.com/external-secrets/external-secrets-helm-operator
       repoURL: 'https://charts.external-secrets.io',
       chart: 'external-secrets',
-      targetRevision: '0.18.2',
+      targetRevision: '0.20.4',
       helm: {
         releaseName: name,
         valuesObject: {
