@@ -66,7 +66,7 @@ local helm_app = {
       // https://github.com/grafana/mimir/tree/main/operations/helm/charts/mimir-distributed
       repoURL: 'https://grafana.github.io/helm-charts',
       chart: 'mimir-distributed',
-      targetRevision: '5.9.0-weekly.359',
+      targetRevision: '5.9.0-weekly.365',
       helm: {
         releaseName: name,
         valuesObject: {
